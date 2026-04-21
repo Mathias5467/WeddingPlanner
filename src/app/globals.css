@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- DARK MODE (Default) --- */
+  --bg-main: #09090b;
+  --bg-card: #121214;
+  --bg-input: #18181b;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  
+  /* --- TÉMY (Farby akcentov) --- */
+  --brand-primary: 251 146 60;   /* orange-400 */
+  --brand-hover: 249 115 22;     /* orange-500 */
+  --brand-light: 251 146 60 / 0.1;
+  --brand-hue: 20deg;
+}
+[data-mode='light'] {
+  --bg-main: #f1f5f9;      /* Jemne modrasté svetlé pozadie */
+  --bg-card: #ffffff;      /* Čisto biele karty */
+  --bg-input: #f8fafc;     /* Svetlejšie inputy */
+  --border-color: rgba(0, 0, 0, 0.15); /* Výraznejšie čiary */
+  --text-main: #000000;    /* Absolútna čierna pre maximálny kontrast */
+  --text-muted: #334155;   /* Tmavo sivá (slate-700) namiesto svetlej sivej */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Pridaj toto pod to pre lepšie tiene v Light Mode */
+[data-mode='light'] .shadow-xl {
+  shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* --- DEFINÍCIE TÉM --- */
+[data-theme='blue'] { --brand-primary: 56 189 248; --brand-hue: 190deg; }
+[data-theme='emerald'] { --brand-primary: 52 211 153; --brand-hue: 150deg; }
+[data-theme='rose'] { --brand-primary: 251 113 133; --brand-hue: 340deg; }
+[data-theme='violet'] { --brand-primary: 167 139 250; --brand-hue: 260deg; }
+[data-theme='amber'] { --brand-primary: 251 191 36; --brand-hue: 45deg; }
+[data-theme='cyan'] { --brand-primary: 34 211 238; --brand-hue: 180deg; }
+[data-theme='gold'] { --brand-primary: 161 140 85; --brand-hue: 40deg; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  transition: background 0.3s ease;
+}
+
+/* Scrollbar prispôsobený módom */
+::-webkit-scrollbar { width: 15px; height: 15px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb {
+  background-color: var(--text-muted);
+  border-radius: 20px;
+  border: 4px solid var(--bg-main); 
+  background-clip: padding-box;
+}
+
+/* Mriežka na pozadí */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image: radial-gradient(rgb(var(--brand-primary) / 0.15) 1px, transparent 1px);
+}
+
+/* Ostatné utility */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+@keyframes progressShrink { from { width: 100%; } to { width: 0%; } }
+.animate-progress-shrink { animation: progressShrink 5s linear forwards; }
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(var(--brand-hue));
+  cursor: pointer;
 }
