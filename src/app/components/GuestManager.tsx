@@ -120,7 +120,7 @@ export function GuestManager({ guests, refresh }: { guests: any[], refresh: () =
         </button>
       </form>
 
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)]/60 rounded-3xl overflow-hidden shadow-sm">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)]/60 rounded-3xl overflow-visible shadow-sm">
         <table className="w-full text-left border-collapse">
           <thead className="bg-[var(--bg-input)]/50 text-xs text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--border-color)]/60">
             <tr>
@@ -142,25 +142,30 @@ export function GuestManager({ guests, refresh }: { guests: any[], refresh: () =
                 <tr><td colSpan={5} className="p-10 text-center text-zinc-600">Zatiaľ žiadni hostia v zozname.</td></tr>
             )}
             {sortedGuests.map(guest => (
-              <tr key={guest.id} className="border-b border-[var(--border-color)]/30 hover:bg-[var(--bg-input)]/20 transition-colors group">
+              <tr 
+                key={guest.id} 
+                className={`border-b border-[var(--border-color)]/30 hover:bg-[var(--bg-input)]/20 transition-colors group
+                  ${editingId === guest.id ? 'relative z-[100] bg-[var(--brand-light)]/5' : 'z-0'}`}
+              >
                 {editingId === guest.id ? (
-                  <td colSpan={5} className="p-0">
-                    <form onSubmit={async (e: React.FormEvent<HTMLFormElement>) => { 
-                        e.preventDefault(); 
-                        await updateGuest(guest.id, new FormData(e.currentTarget)); 
-                        setEditingId(null); 
-                        refresh(); 
-                    }} className="flex items-center gap-4 p-4 pl-8  animate-in fade-in">
-                      <input name="name" defaultValue={guest.name} className="flex-1 bg-[var(--bg-input)] border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[rgb(var(--brand-primary))]" />
+                    <td colSpan={5} className="p-0 overflow-visible">
+                      <form onSubmit={async (e: React.FormEvent<HTMLFormElement>) => { 
+                          e.preventDefault(); 
+                          const form = e.currentTarget;
+                          await updateGuest(guest.id, new FormData(form)); 
+                          setEditingId(null); 
+                          refresh(); 
+                      }} className="flex items-center gap-4 p-4 pl-8 animate-in fade-in overflow-visible">
+                      <input name="name" defaultValue={guest.name} className="flex-1 bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[rgb(var(--brand-primary))]" />
+          
+                      <div className="w-44"><CustomDropdown name="side" options={SIDE_OPTIONS} defaultValue={guest.family_side} /></div>
+                      <div className="w-44"><CustomDropdown name="status" options={STATUS_OPTIONS} defaultValue={guest.status} /></div>
                       
-                      <div className="w-40"><CustomDropdown name="side" options={SIDE_OPTIONS} defaultValue={guest.family_side} /></div>
-                      <div className="w-40"><CustomDropdown name="status" options={STATUS_OPTIONS} defaultValue={guest.status} /></div>
-                      
-                      <input name="note" defaultValue={guest.note} className="flex-1 bg-[var(--bg-input)] border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none" placeholder="Poznámka..." />
+                      <input name="note" defaultValue={guest.note} className="flex-1 bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-lg px-3 py-1.5 text-sm outline-none" placeholder="Poznámka..." />
                       
                       <div className="flex gap-2">
-                        <button type="submit" className="p-2 text-green-400 hover:bg-green-400/10 rounded-lg"><Check size={18} /></button>
-                        <button type="button" onClick={() => setEditingId(null)} className="p-2 text-[var(--text-muted)] hover:bg-zinc-700 rounded-lg"><X size={18} /></button>
+                        <button type="submit" className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg cursor-pointer"><Check size={18} /></button>
+                        <button type="button" onClick={() => setEditingId(null)} className="p-2 text-[var(--text-muted)] hover:bg-[var(--bg-input)] rounded-lg cursor-pointer"><X size={18} /></button>
                       </div>
                     </form>
                   </td>
