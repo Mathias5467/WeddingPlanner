@@ -28,15 +28,25 @@ try {
   console.error("Chyba pri migrácii:", e);
 }
 
+try {
+  const guestInfo = db.prepare("PRAGMA table_info(guests)").all() as any[];
+  const hasAlergies = guestInfo.some(column => column.name === 'alergies');
+  
+  if (!hasAlergies) {
+    db.exec("ALTER TABLE guests ADD COLUMN alergies TEXT DEFAULT ''");
+    console.log("Stĺpec 'alergies' bol úspešne pridaný.");
+  }
+} catch (e) {
+  console.error("Chyba pri migrácii alergii:", e);
+}
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS guests (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       family_side TEXT DEFAULT 'Bride',
-      relation TEXT DEFAULT '',
       status TEXT DEFAULT 'Not Asked',
-      phone TEXT DEFAULT '',
-      allergies TEXT DEFAULT '',
+      alergies TEXT DEFAULT '',
       note TEXT DEFAULT '',
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
   );

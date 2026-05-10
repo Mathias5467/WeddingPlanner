@@ -41,15 +41,33 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
   return (
     <div className="relative" ref={dropdownRef}>
       <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all relative cursor-pointer
-          ${isOpen ? 'bg-zinc-800 border-zinc-700' : 'border-[var(--border-color)]/80 hover:bg-zinc-800'}`}
-      >
-        <Bell size={18} className={activeNotifications.length > 0 ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)]'} />
-        {activeNotifications.length > 0 && (
-          <span className="absolute top-0 right-0 w-3 h-3 bg-[rgb(var(--brand-primary))] rounded-full border-2 border-[#09090b]" />
-        )}
-      </button>
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all relative cursor-pointer group
+            /* ZÁKLADNÝ STAV (Muted) */
+            bg-transparent border-[var(--border-color)]
+            /* HOVER STAV (Farba témy) */
+            hover:bg-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:shadow-[0_0_20px_rgba(var(--brand-primary),0.4)]
+            /* STAV KEĎ JE OTVORENÉ */
+            ${isOpen ? 'bg-[var(--brand-primary)] border-[var(--brand-primary)]' : ''}`}
+        >
+          <Bell 
+            size={18} 
+            className={`transition-colors duration-300
+              /* ZÁKLADNÁ FARBA: text-main alebo primary ak sú notifikácie */
+              ${activeNotifications.length > 0 ? 'text-[var(--brand-primary)]' : 'text-[var(--text-muted)]'}
+              /* HOVER FARBA: Kontrastná čierna/biela podľa mode */
+              group-hover:text-[var(--brand-contrast)]
+              /* AK JE OTVORENÉ: Tiež kontrastná */
+              ${isOpen ? 'text-[var(--brand-contrast)]' : ''}`} 
+          />
+
+          {activeNotifications.length > 0 && (
+            <span className={`absolute top-0 right-0 w-3 h-3 rounded-full border-2 border-[var(--bg-main)] transition-all
+              /* Bodka je primary, ale pri hoveri na tlačidlo sa zmení na kontrastnú aby nezmizla */
+              bg-[var(--brand-primary)] group-hover:bg-[var(--brand-contrast)]`} 
+            />
+          )}
+        </button>
 
       <AnimatePresence>
         {isOpen && (
@@ -57,7 +75,7 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute right-0 mt-3 w-80 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.7)] overflow-hidden z-[1000]"
+            className="absolute right-0 mt-3 w-80 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[2rem] shadow-[5px_4px_5px_rgba(0,0,0,0.2)] overflow-hidden z-[1000]"
           >
             <div className="p-5 border-b border-[var(--border-color)]/60 bg-[var(--bg-input)]/30">
               <h3 className="text-sm font-black text-[var(--text-main)] uppercase tracking-widest">Oznámenia</h3>
@@ -82,7 +100,7 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
                 ))
               ) : (
                 <div className="p-10 text-center text-zinc-600">
-                  <Info size={32} className="mx-auto mb-2 opacity-10" />
+                  <Info size={32} className="mx-auto mb-2" />
                   <p className="text-xs">Žiadne nové pripomienky</p>
                 </div>
               )}

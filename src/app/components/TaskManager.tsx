@@ -47,30 +47,31 @@ export function TaskManager() {
       updateTasksOrder(newOrder.map(t => t.id));
     }
   };
+const inputStyles = "w-full bg-[var(--bg-input)] border border-[var(--border-color)] rounded-xl px-4 h-[42px] text-sm outline-none transition-all focus:border-[var(--brand-primary))] focus:shadow-[0_0_5px_var(--brand-primary)] ring-[var(--brand-primary)]";
 
   return (
     <div className="w-full animate-in fade-in duration-500 space-y-6">
       
-      <div className="flex flex-wrap gap-4 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-5 rounded-[2rem] shadow-2xl">
+      <div className="flex flex-wrap gap-4 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-5 rounded-[1rem] shadow-2xl">
         <div className="flex-1 min-w-[300px] relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
           <input 
             placeholder="Hľadať úlohu alebo #tag..." 
             value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] transition-all shadow-inner"
+            className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl py-3 pl-12 pr-4 text-sm outline-none focus:border-[var(--brand-primary)] transition-all shadow-inner"
           />
         </div>
         
-        <div className="flex items-center gap-2 bg-zinc-950 p-1.5 rounded-2xl border border-[var(--border-color)] shadow-inner">
+        <div className="flex items-center gap-2 p-1.5 rounded-2xl border border-[var(--border-color)] shadow-inner">
           <button 
             onClick={() => setSortBy('manual')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${sortBy === 'manual' ? 'bg-[var(--brand-light)] text-[rgb(var(--brand-primary))]' : 'text-[var(--text-muted)] hover:text-zinc-300'}`}
+            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${sortBy === 'manual' ? 'bg-[var(--brand-primary)] text-white' : 'text-[var(--text-main)] hover:text-[var(--brand-primary)]'}`}
           >
             <GripVertical size={14} /> Drag & Drop
           </button>
           <button 
             onClick={() => setSortBy('date')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${sortBy === 'date' ? 'bg-[var(--brand-light)] text-[rgb(var(--brand-primary))]' : 'text-[var(--text-muted)] hover:text-zinc-300'}`}
+            className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 cursor-pointer ${sortBy === 'date' ? 'bg-[var(--brand-primary)] text-white' : 'text-[var(--text-main)] hover:text-[var(--brand-primary)]'}`}
           >
             <Clock size={14} /> Kalendár
           </button>
@@ -85,11 +86,11 @@ export function TaskManager() {
           form.reset();
           loadTasks();
         }}
-        className="bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-8 rounded-[2.5rem] grid grid-cols-1 md:grid-cols-12 gap-6 shadow-2xl relative z-20"
+        className="bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-8 rounded-[1rem] grid grid-cols-1 md:grid-cols-12 gap-6 shadow-lg relative z-20"
       >
         <div className="md:col-span-5">
           <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-[0.2em]">Názov novej úlohy</label>
-          <input name="text" autoComplete='off' required placeholder="Čo treba vybaviť?" className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 mt-2 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] shadow-inner transition-all" />
+          <input name="text" autoComplete='off' required placeholder="Čo treba vybaviť?" className={inputStyles} />
         </div>
         
         <div className="md:col-span-3">
@@ -99,13 +100,12 @@ export function TaskManager() {
         <div className="md:col-span-3">
           <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-[0.2em]">Hashtagy</label>
           <div className="relative">
-            <Hash className="absolute left-4 top-[28px] text-[var(--text-muted)]" size={18} />
-            <input autoComplete='off' name="tags" placeholder="napr. #foto #jedlo" className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 pl-12 mt-2 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] shadow-inner transition-all" />
+            <input autoComplete='off' name="tags" placeholder="napr. #foto #jedlo" className={inputStyles} />
           </div>
         </div>
 
         <div className="md:col-span-1 flex items-end">
-          <button type="submit" className="w-full h-[56px] bg-[rgb(var(--brand-primary))] hover:bg-[rgb(var(--brand-hover))] text-[var(--text-main)] rounded-2xl font-black transition-all active:scale-95 shadow-xl shadow-[rgb(var(--brand-primary)/0.2)] flex items-center justify-center cursor-pointer">
+          <button type="submit" className="w-full h-[42px] bg-[var(--brand-primary)] hover:bg-[var(--brand-hover)] text-white rounded-[0.8rem] font-black transition-all active:scale-95 shadow-xl shadow-[var(--brand-primary)] flex items-center justify-center cursor-pointer">
             <Plus size={28} />
           </button>
         </div>
@@ -120,30 +120,30 @@ export function TaskManager() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className={`bg-[var(--bg-card)] border border-[var(--border-color)]/60 py-1 px-5 rounded-[1.5rem] flex items-center gap-5 group transition-all shadow-xl hover:border-zinc-700 ${task.completed ? 'opacity-50' : ''}`}
+              className={`bg-[var(--bg-card)] py-3 px-5 rounded-[1rem] flex items-center gap-5 group transition-all shadow-lg border border-[var(--border-color)] hover:border-[var(--brand-primary)] ${task.completed ? 'opacity-50' : ''}`}
             >
-              {sortBy === 'manual' && <GripVertical className="text-zinc-800 group-hover:text-zinc-600 cursor-grab active:cursor-grabbing" size={20} />}
+              {sortBy === 'manual' && <GripVertical className="text-[var(--text-main)] group-hover:text-[var(--text-main)] cursor-grab active:cursor-grabbing" size={20} />}
               
               <button 
                 onClick={async () => { await toggleTask(task.id, task.completed ? 0 : 1); loadTasks(); }}
-                className={`transition-all transform hover:scale-110 cursor-pointer ${task.completed ? 'text-[rgb(var(--brand-primary))]' : 'text-zinc-800 hover:text-zinc-600'}`}
+                className={`transition-all transform hover:scale-110 cursor-pointer ${task.completed ? 'text-[var(--brand-primary)]' : 'text-[var(--text-main)]'}`}
               >
                 {task.completed ? <CheckCircle2 size={20} /> : <Circle size={20} />}
               </button>
 
               <div className="flex-1 min-w-0">
-                <p className={`text-base font-bold transition-all ${task.completed ? 'text-zinc-600 line-through' : 'text-zinc-100'}`}>
+                <p className={`text-base font-bold transition-all ${task.completed ? 'text-[var(--text-main)] line-through' : 'text-[var(--text-main)]'}`}>
                   {task.text}
                 </p>
                 <div className="flex flex-wrap gap-4 mt-2">
                   {task.due_date && (
-                    <div className="flex items-center gap-2 text-[10px] font-black text-[var(--text-main)]/60 bg-zinc-950 px-3 py-1 rounded-full border border-[var(--border-color)] uppercase tracking-tighter shadow-inner">
-                      <Clock size={12} className="text-[rgb(var(--brand-primary))]" /> 
+                    <div className="flex items-center gap-2 text-[10px] font-black text-[var(--text-main)]/60 px-3 py-1 rounded-full border border-[var(--text-main)] uppercase tracking-tighter shadow-inner">
+                      <Clock size={12} className="text-[var(--brand-primary)]" /> 
                       {new Date(task.due_date).toLocaleString('sk-SK', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   )}
                   {task.tags && task.tags.split(' ').map((tag: string, i: number) => (
-                    <span key={i} className="text-[10px] font-black text-[rgb(var(--brand-primary))] bg-[var(--brand-light)] px-3 py-1 rounded-full uppercase tracking-widest border border-[rgb(var(--brand-primary)/0.1)]">
+                    <span key={i} className="text-[10px] font-black text-[var(--brand-primary)] bg-[var(--brand-light)] px-3 py-1 rounded-full uppercase tracking-widest border border-[var(--brand-primary)]">
                       {tag.startsWith('#') ? tag : `#${tag}`}
                     </span>
                   ))}
@@ -153,7 +153,7 @@ export function TaskManager() {
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
                 <button 
                   onClick={() => setTaskToEdit(task)}
-                  className="p-3 text-[var(--text-muted)] hover:text-green-500 hover:bg-green-500/10 rounded-xl transition-all cursor-pointer"
+                  className="p-3 text-[var(--text-muted)] hover:text-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/30 rounded-xl transition-all cursor-pointer"
                 >
                   <Edit3 size={15} />
                 </button>
@@ -202,7 +202,7 @@ export function TaskManager() {
             <div className="space-y-5">
               <div>
                 <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-widest">Názov úlohy</label>
-                <input name="text" required defaultValue={taskToEdit.text} className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 mt-2 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] shadow-inner" />
+                <input name="text" required defaultValue={taskToEdit.text} className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 mt-2 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -211,7 +211,7 @@ export function TaskManager() {
                   <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-widest">Hashtagy</label>
                   <div className="relative">
                     <Hash className="absolute left-4 top-[28px] text-[var(--text-muted)]" size={18} />
-                    <input name="tags" defaultValue={taskToEdit.tags} placeholder="#tagy" className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 pl-12 mt-2 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] shadow-inner" />
+                    <input name="tags" defaultValue={taskToEdit.tags} placeholder="#tagy" className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 pl-12 mt-2 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner" />
                   </div>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export function TaskManager() {
 
             <div className="flex gap-4 pt-4">
               <button type="button" onClick={() => setTaskToEdit(null)} className="flex-1 p-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold transition-all cursor-pointer">Zrušiť</button>
-              <button type="submit" className="flex-1 p-4 rounded-2xl bg-[rgb(var(--brand-primary))] hover:opacity-90 text-[var(--text-main)] font-black shadow-lg shadow-[rgb(var(--brand-primary)/0.2)] cursor-pointer">
+              <button type="submit" className="flex-1 p-4 rounded-2xl bg-[var(--brand-primary)] hover:opacity-90 text-[var(--text-main)] font-black shadow-lg shadow-[var(--brand-primary)] cursor-pointer">
                 Uložiť zmeny
               </button>
             </div>

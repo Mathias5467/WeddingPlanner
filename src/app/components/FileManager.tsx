@@ -48,17 +48,17 @@ export function FileManager() {
   return (
     <div className="w-full animate-in fade-in duration-500 space-y-8">
       
-      <div className="flex flex-wrap gap-6 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-6 rounded-[2.5rem] shadow-2xl">
+      <div className="flex flex-wrap gap-6 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-6 rounded-[1rem] shadow-lg">
         <div className="flex-1 min-w-[300px] relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
           <input 
             placeholder="Hľadať súbor..." 
             value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl py-3.5 pl-12 pr-4 text-sm outline-none focus:border-[rgb(var(--brand-primary)/0.5)] transition-all shadow-inner"
+            className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-xl py-3.5 pl-12 pr-4 text-sm outline-none focus:border-[var(--brand-primary)]/0.5 transition-all shadow-inner"
           />
         </div>
 
-        <label className="bg-[rgb(var(--brand-primary))] hover:bg-[rgb(var(--brand-hover))] text-[var(--text-main)] px-8 py-3.5 rounded-2xl font-black flex items-center gap-3 transition-all shadow-lg shadow-[rgb(var(--brand-primary)/0.2)] cursor-pointer active:scale-95">
+        <label className="bg-[var(--brand-primary)] hover:bg-[var(--brand-hover)] text-white px-8 py-3.5 rounded-xl font-black flex items-center gap-3 transition-all shadow-lg shadow-[var(--brand-primary)]/0.2 cursor-pointer active:scale-95">
           {isUploading ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}><Upload size={20}/></motion.div> : <Plus size={20} />}
           <span>{isUploading ? 'Nahrávam...' : 'Nahrať súbor'}</span>
           <input 
@@ -89,36 +89,36 @@ export function FileManager() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="group bg-[var(--bg-card)] border border-[var(--border-color)]/60 rounded-[2rem] overflow-hidden shadow-xl hover:border-zinc-600 transition-all flex flex-col"
+                className="group bg-[var(--bg-card)] border border-[var(--border-color)]/60 rounded-[1.5rem] overflow-hidden shadow-xl  transition-all flex flex-col"
               >
                 <div className="aspect-square h-35 bg-[var(--bg-input)] relative overflow-hidden flex items-center justify-center border-b border-[var(--border-color)]/60">
                   {isImage ? (
                     <img src={file.path} alt={file.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   ) : (
                     <div className="flex flex-col items-center gap-2">
-                      <div className="p-4  bg-zinc-950 rounded-2xl border border-[var(--border-color)] shadow-inner">
-                        <FileText size={40} className="text-[rgb(var(--brand-primary))] opacity-60" />
+                      <div className="p-4 rounded-2xl border border-[var(--brand-hover)]">
+                        <FileText size={40} className="text-[var(--brand-primary)] opacity-60" />
                       </div>
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <a href={file.path} target="_blank" className="p-3 bg-[var(--bg-input)] rounded-xl text-[var(--text-main)] hover:bg-[rgb(var(--brand-primary))] transition-all shadow-xl">
+                  <div className="absolute inset-0 bg-[var(--brand-contrast)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 duration-300">
+                    <a href={file.path} target="_blank" className="p-3 bg-[var(--bg-input)] rounded-xl text-[var(--text-main)] border border-[var(--brand-primary)] transition-all shadow-xl">
                       <Eye size={20} />
                     </a>
-                    <a href={file.path} download={file.name} className="p-3 bg-[var(--bg-input)] rounded-xl text-[var(--text-main)] hover:bg-[rgb(var(--brand-primary))] transition-all shadow-xl">
+                    <a href={file.path} download={file.name} className="p-3 bg-[var(--bg-input)] rounded-xl text-[var(--text-main)] border border-[var(--brand-primary)] transition-all shadow-xl">
                       <Download size={20} />
                     </a>
                     <button 
                       onClick={() => setFileToDelete(file)}
-                      className="p-3 bg-[var(--bg-input)] rounded-xl text-red-500 hover:bg-red-500 hover:text-[var(--text-main)] transition-all shadow-xl"
+                      className="p-3 bg-[var(--bg-input)] cursor-pointer rounded-xl text-[var(--text-main)] border border-[var(--brand-primary)] transition-all shadow-xl"
                     >
                       <Trash2 size={20} />
                     </button>
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#161618]">
+                <div className="p-4 bg-[var(--brand-primary)]">
                   {editingId === file.id ? (
                     <div className="flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
                       <input
@@ -130,7 +130,7 @@ export function FileManager() {
                           if (e.key === 'Escape') setEditingId(null);
                         }}
                         onBlur={() => handleRename(file.id)}
-                        className="w-full bg-zinc-950 border border-[rgb(var(--brand-primary)/0.5)] text-[var(--text-main)] text-[11px] font-bold py-1 px-2 rounded-lg outline-none shadow-[0_0_10px_rgba(var(--brand-primary),0.15)]"
+                        className="w-full  border border-[var(--brand-primary)]/0.5 text-[var(--brand-contrast)] text-[14px] font-bold py-1 px-2 rounded-lg outline-none shadow-[0_0_10px_var(--brand-primary)]"
                       />
                     </div>
                   ) : (
@@ -139,17 +139,17 @@ export function FileManager() {
                         setEditingId(file.id);
                         setTempName(file.name);
                       }}
-                      className="text-xs font-bold text-zinc-200 truncate pr-2 cursor-pointer hover:text-[rgb(var(--brand-primary))] transition-colors flex items-center gap-2 group/text" 
+                      className="text-[14px] font-bold text-white truncate pr-2 cursor-pointer transition-colors flex items-center gap-2 group/text" 
                       title="Kliknite pre premenovanie"
                     >
                       <span className="truncate">{file.name}</span>
-                      <Edit3 size={10} className="text-zinc-600 opacity-0 group-hover/text:opacity-100 transition-opacity flex-shrink-0" />
+                      <Edit3 size={15} className="text-white opacity-0 group-hover/text:opacity-100 transition-opacity flex-shrink-0" />
                     </p>
                   )}
                   
-                  <div className="flex items-center justify-between mt-1.5 border-t border-[var(--border-color)]/50 pt-1.5">
-                    <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">{file.type.split('/')[1]}</span>
-                    <span className="text-[9px] font-bold text-zinc-600 bg-zinc-950 px-2 py-0.5 rounded-full border border-[var(--border-color)]">{formatSize(file.size)}</span>
+                  <div className="flex items-center justify-between mt-1.5 border-t-2 border-white pt-1.5">
+                    <span className="text-[11px] font-black text-white uppercase tracking-widest">{file.type.split('/')[1]}</span>
+                    <span className="text-[11px] font-bold text-white px-2 py-0.5 rounded-full border-2 border-white">{formatSize(file.size)}</span>
                   </div>
                 </div>
               </motion.div>
@@ -161,7 +161,7 @@ export function FileManager() {
       {filteredFiles.length === 0 && (
         <div className="py-32 text-center border-2 border-dashed border-[var(--border-color)] rounded-[3rem]">
           <ImageIcon size={64} className="mx-auto mb-4 opacity-10 text-[var(--text-main)]" />
-          <p className="text-[var(--text-muted)]">Žiadne súbory nenajdené. Nahrajte prvú zmluvu alebo fotku!</p>
+          <p className="text-[var(--text-muted)]">Žiadne súbory nenajdené. Nahrajte prvý dokument!</p>
         </div>
       )}
 

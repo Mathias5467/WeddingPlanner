@@ -37,17 +37,10 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
   return (
     <div className="animate-in fade-in duration-500 space-y-10 pb-10">
       
-      {/* 1. FINANČNÝ PREHĽAD */}
       <section>
-        <div className="flex items-center gap-3 mb-6">
-           <div className="p-2 bg-[var(--brand-light)] rounded-lg text-[rgb(var(--brand-primary))]">
-              <Wallet size={20} />
-           </div>
-           <h3 className="text-xl font-black text-[var(--text-main)] uppercase tracking-tighter">Ekonomika svadby</h3>
-        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatBox label="Plánované výdavky" value={totalPlanned} subValue="Súčet všetkých položiek" icon={Wallet} color="text-white" isCurrency />
-            <StatBox label="Priemer na osobu" value={costPerPerson} subValue={`Pri ${stats.totalGuests} hosťoch`} icon={Users} color="text-[rgb(var(--brand-primary))]" isCurrency />
+            <StatBox label="Plánované výdavky" value={totalPlanned} subValue="Súčet všetkých položiek" icon={Wallet} color="text-[var(--brand-primary)]" isCurrency />
+            <StatBox label="Priemer na osobu" value={costPerPerson} subValue={`Pri ${stats.totalGuests} hosťoch`} icon={Users} color="text-[var(--brand-primary)]" isCurrency />
             <div 
               onClick={() => onNavigate('Settings')} 
               className="cursor-pointer transition-all active:scale-95 group/card"
@@ -57,18 +50,16 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
                 value={stats.targetBudget || 12000} 
                 subValue="Kliknite pre zmenu" 
                 icon={Target} 
-                color="text-amber-500" 
+                color="text-[var(--brand-primary)]" 
                 isCurrency 
               />
           </div>
         </div>
       </section>
 
-      {/* 2. GRAFY HOSTÍ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* GRAF: Pomer strán */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Pomer strán hostí</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -95,8 +86,7 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
           </div>
         </div>
 
-        {/* GRAF: Stav potvrdení */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Stav potvrdení</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -124,14 +114,8 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         </div>
       </div>
 
-      {/* 3. VEĽKÝ GRAF: VÝDAVKY PODĽA KATEGÓRIÍ */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
-        <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-[var(--brand-light)] rounded-lg text-[rgb(var(--brand-primary))]">
-                <BarChart3 size={20} />
-            </div>
-            <h3 className="text-lg font-black text-[var(--text-main)] uppercase tracking-widest">Rozpis výdavkov podľa kategórií</h3>
-        </div>
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
+        <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Rozpis výdavkov podľa kategórií</h3>
         <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.expensesByCategory} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -150,7 +134,7 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
                     />
                     <Tooltip 
                         cursor={false}
-                        contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: '0 20px 50px rgba(0,0,0,0.4)' }}
+                        contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: '5px 5px 5px rgba(0,0,0,0.2)' }}
                         itemStyle={{ color: 'var(--text-main)', fontSize: '12px' }}
                         formatter={(value: any) => [`${Number(value).toLocaleString()} €`, 'Suma']}
                     />
@@ -164,14 +148,13 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         </div>
       </div>
 
-      {/* 4. HLAVNÝ STAV ROZPOČTU (PLÁN VS LIMIT) */}
-      <div className={`bg-[var(--bg-card)] border p-8 rounded-[2.5rem] shadow-2xl flex items-center justify-between overflow-hidden relative group transition-all ${isOverBudget ? 'border-red-500/50' : 'border-[var(--border-color)]'}`}>
+      <div className={`bg-[var(--bg-card)] border p-8 duration-500 hover:border-[var(--brand-primary)] rounded-[2.5rem] shadow-lg flex items-center justify-between overflow-hidden relative group transition-all ${isOverBudget ? 'border-red-500/50' : 'border-[var(--border-color)]'}`}>
         <div className="relative z-10 w-full">
           <div className="flex justify-between items-end mb-4">
             <div>
-              <p className="text-xs font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-2">Čerpanie rozpočtu (Plán vs Limit)</p>
-              <h4 className={`text-4xl font-black tracking-tighter ${isOverBudget ? 'text-red-500' : 'text-[var(--text-main)]'}`}>
-                {totalPlanned.toLocaleString()} € <span className="text-zinc-600 font-medium text-2xl">/ {budgetLimit.toLocaleString()} €</span>
+              <p className="text-xs font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-2">Aktuálna spotreba</p>
+              <h4 className={`text-4xl font-black tracking-tighter ${isOverBudget ? 'text-red-500' : 'text-[var(--text-muted)]'}`}>
+                {totalPlanned.toLocaleString()} € <span className="font-medium text-[var(--brand-primary)]">/ {budgetLimit.toLocaleString()} €</span>
               </h4>
             </div>
             <div className="text-right text-[var(--text-muted)]">
@@ -183,13 +166,13 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="h-4 flex-1 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800 shadow-inner text-white">
+            <div className="h-4 flex-1 rounded-full overflow-hidden border border-zinc-800 shadow-inner text-white">
                 <div 
-                    className={`h-full transition-all duration-1000 ${isOverBudget ? 'bg-red-500' : 'bg-[rgb(var(--brand-primary))]'}`} 
+                    className={`h-full transition-all duration-1000 ${isOverBudget ? 'bg-red-500' : 'bg-[var(--brand-primary)]'}`} 
                     style={{ width: `${budgetPercent}%` }}
                 />
             </div>
-            <span className={`text-sm font-black w-12 text-right ${isOverBudget ? 'text-red-500' : 'text-[rgb(var(--brand-primary))]'}`}>
+            <span className={`text-m font-black w-12 text-right ${isOverBudget ? 'text-red-500' : 'text-[var(--brand-primary)]'}`}>
                 {budgetPercent}%
             </span>
           </div>
@@ -201,19 +184,17 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
           )}
         </div>
 
-        {/* Dekorácia na pozadí */}
-        <div className={`absolute -right-10 -bottom-10 w-64 h-64 rounded-full blur-3xl opacity-10 ${isOverBudget ? 'bg-red-500' : 'bg-[rgb(var(--brand-primary))]'}`} />
+        <div className={`absolute -right-10 -bottom-10 w-64 h-64 rounded-full blur-3xl opacity-10 data-[mode=light]:opacity-30 ${isOverBudget ? 'bg-red-500' : 'bg-[rgb(var(--brand-primary))]'}`} />
       </div>
 
     </div>
   );
 }
 
-// --- POMOCNÉ KOMPONENTY ---
 
 function StatBox({ label, value, subValue, icon: Icon, color, isCurrency }: any) {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-6 rounded-[2rem] shadow-xl hover:border-zinc-500 transition-all group">
+    <div className="bg-[var(--bg-card)] cursor-pointer border border-[var(--border-color)] p-6 rounded-[2rem] duration-500 shadow-lg hover:border-[var(--brand-primary)] transition-all group">
       <div className="flex items-center gap-4">
         <div className={`p-4 rounded-2xl bg-[var(--bg-input)] border border-[var(--border-color)] ${color} shadow-inner group-hover:scale-110 transition-transform`}>
           <Icon size={28} />

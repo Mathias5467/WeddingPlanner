@@ -12,25 +12,27 @@
     "appId": "com.mojasvadba.planner",
     "productName": "Naša Svadba",
     "directories": {
-        "output": "dist"
+      "output": "dist"
     },
     "win": {
-        "target": "nsis",
-        "icon": "public/logo.ico" 
+      "target": "nsis",
+      "icon": "public/logo.ico"
     },
     "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "createDesktopShortcut": "always",
-        "createStartMenuShortcut": true,
-        "shortcutName": "Naša Svadba",
-        "installerIcon": "public/logo.ico",
-        "uninstallerIcon": "public/logo.ico"
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Naša Svadba",
+      "installerIcon": "public/logo.ico",
+      "uninstallerIcon": "public/logo.ico"
     }
-    },
+  },
   "dependencies": {
     "better-sqlite3": "^12.9.0",
     "framer-motion": "^12.38.0",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.8.0",
     "next": "16.2.4",
     "react": "19.2.4",

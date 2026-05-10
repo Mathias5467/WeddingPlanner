@@ -22,7 +22,7 @@ import { ExpenseManager } from './components/ExpenseManager';
 import { NotificationCenter } from './components/NotificationCenter';
 
 export default function WeddingPlanner() {
-  const { theme, mode } = useTheme(); // Mode pridáme pre istotu, ak by sme ho potrebovali
+  const { theme, mode } = useTheme();
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [stats, setStats] = useState<any>(null);
   const [guests, setGuests] = useState<any[]>([]);
@@ -60,7 +60,7 @@ export default function WeddingPlanner() {
         <div className="h-28 flex flex-col justify-center px-8 border-b border-[var(--border-color)]">
           <div className="flex items-baseline gap-1">
             {/* Elegantné veľké W */}
-            <span className="font-serif italic text-4xl font-black text-[rgb(var(--brand-primary))] leading-none">
+            <span className="font-serif italic text-4xl font-black text-[var(--brand-primary)] leading-none">
               W
             </span>
             
@@ -72,11 +72,11 @@ export default function WeddingPlanner() {
           
           {/* Subtílna dekoračná čiara vo farbe témy */}
           <div className="mt-2 flex items-center gap-3 w-full">
-            <div className="h-[1px] w-4 bg-[rgb(var(--brand-primary))] flex-shrink-0" />
+            <div className="h-[2px] w-4 bg-[var(--brand-primary)] flex-shrink-0" />
             <span className="text-[8px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-semibold whitespace-nowrap">
               Wedding <br></br> Assistant
             </span>
-            <div className="h-[1px] flex-1 bg-[rgb(var(--brand-primary))]" />
+            <div className="h-[2px] flex-1 bg-[var(--brand-primary)]" />
           </div>
         </div>
         
@@ -87,8 +87,8 @@ export default function WeddingPlanner() {
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center px-4 py-3 cursor-pointer rounded-xl transition-all duration-200 ${
                 activeTab === item.id 
-                  ? 'bg-[var(--brand-light)] text-[rgb(var(--brand-primary))] font-bold shadow-sm'
-                  : 'text-[var(--text-muted)] hover:bg-[var(--brand-light)] hover:text-[rgb(var(--brand-primary))]'
+                  ? 'bg-[var(--brand-light)] text-[var(--brand-primary)] font-bold shadow-sm'
+                  : 'text-[var(--text-muted)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)]'
               }`}
             >
               <item.icon size={18} className="mr-4" />

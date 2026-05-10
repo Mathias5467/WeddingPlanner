@@ -4,47 +4,94 @@
   /* --- DARK MODE (Default) --- */
   --bg-main: #09090b;
   --bg-card: #121214;
-  --bg-input: #18181b;
-  --border-color: rgba(255, 255, 255, 0.08);
   --text-main: #ffffff;
   --text-muted: #a1a1aa;
-  
-  /* --- TÉMY (Farby akcentov) --- */
-  --brand-primary: 251 146 60;   /* orange-400 */
-  --brand-hover: 249 115 22;     /* orange-500 */
-  --brand-light: 251 146 60 / 0.1;
-  --brand-hue: 20deg;
-}
-[data-mode='light'] {
-  --bg-main: #f1f5f9;      /* Jemne modrasté svetlé pozadie */
-  --bg-card: #ffffff;      /* Čisto biele karty */
-  --bg-input: #f8fafc;     /* Svetlejšie inputy */
-  --border-color: rgba(0, 0, 0, 0.15); /* Výraznejšie čiary */
-  --text-main: #000000;    /* Absolútna čierna pre maximálny kontrast */
-  --text-muted: #334155;   /* Tmavo sivá (slate-700) namiesto svetlej sivej */
+  --border-color: rgba(255, 255, 255, 0.18);
+
+  /* --- TÉMY (Základné nastavenie - Gold) --- */
+  --brand-contrast: #000000;
+  --brand-primary: rgb(161, 140, 85); 
+  --brand-hover: rgb(190, 173, 120);   
+  --brand-light: rgba(190, 173, 120, 0.1); 
+  --brand-hue: 40deg;
 }
 
-/* Pridaj toto pod to pre lepšie tiene v Light Mode */
-[data-mode='light'] .shadow-xl {
-  shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+[data-mode='light'] {
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-main: #000000;
+  --text-muted: #334155;
+  --border-color: rgba(0, 0, 0, 0.15);
+  --brand-contrast: #ffffff;
 }
 
 /* --- DEFINÍCIE TÉM --- */
-[data-theme='blue'] { --brand-primary: 56 189 248; --brand-hue: 190deg; }
-[data-theme='emerald'] { --brand-primary: 52 211 153; --brand-hue: 150deg; }
-[data-theme='rose'] { --brand-primary: 251 113 133; --brand-hue: 340deg; }
-[data-theme='violet'] { --brand-primary: 167 139 250; --brand-hue: 260deg; }
-[data-theme='amber'] { --brand-primary: 251 191 36; --brand-hue: 45deg; }
-[data-theme='cyan'] { --brand-primary: 34 211 238; --brand-hue: 180deg; }
-[data-theme='gold'] { --brand-primary: 161 140 85; --brand-hue: 40deg; }
+[data-theme='blue'] { 
+  --brand-primary: rgb(56, 189, 248); 
+  --brand-hover: rgb(125, 211, 252);
+  --brand-light: rgba(56, 189, 248, 0.1);
+  --brand-hue: 199deg;
+}
+
+[data-theme='emerald'] { 
+  --brand-primary: rgb(52, 211, 153); 
+  --brand-hover: rgb(110, 231, 183);
+  --brand-light: rgba(52, 211, 153, 0.1);
+  --brand-hue: 158deg;
+}
+
+[data-theme='rose'] { 
+  --brand-primary: rgb(251, 113, 133); 
+  --brand-hover: rgb(253, 164, 175);
+  --brand-light: rgba(251, 113, 133, 0.1);
+  --brand-hue: 351deg;
+}
+
+[data-theme='violet'] { 
+  --brand-primary: rgb(167, 139, 250); 
+  --brand-hover: rgb(196, 181, 253);
+  --brand-light: rgba(167, 139, 250, 0.1);
+  --brand-hue: 255deg;
+}
+
+[data-theme='amber'] { 
+  --brand-primary: rgb(251, 191, 36); 
+  --brand-hover: rgb(252, 211, 77); 
+  --brand-light: rgba(252, 211, 77, 0.1); 
+  --brand-hue: 45deg;
+}
+
+[data-theme='cyan'] { 
+  --brand-primary: rgb(34, 211, 238); 
+  --brand-hover: rgb(103, 232, 249); 
+  --brand-light: rgba(103, 232, 249, 0.1); 
+  --brand-hue: 180deg;
+}
+
+[data-theme='gold'] { 
+  --brand-primary: rgb(161, 140, 85); 
+  --brand-hover: rgb(190, 173, 120); 
+  --brand-light: rgba(190, 173, 120, 0.1); 
+  --brand-hue: 40deg;
+}
+
+[data-theme='orange'] { 
+  --brand-primary: rgb(251, 146, 60);   /* orange-400 */
+  --brand-hover: rgb(253, 186, 116);     /* orange-300 */
+  --brand-light: rgba(251, 146, 60, 0.1); 
+  --brand-hue: 25deg;
+}
+
+/* --- ZÁKLADNÉ ŠTÝLY --- */
 
 body {
   background: var(--bg-main);
   color: var(--text-main);
-  transition: background 0.3s ease;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Scrollbar prispôsobený módom */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 15px; height: 15px; }
 ::-webkit-scrollbar-track { background: var(--bg-main); }
 ::-webkit-scrollbar-thumb {
@@ -57,17 +104,22 @@ body {
 /* Mriežka na pozadí */
 .bg-grid {
   background-size: 40px 40px;
-  background-image: radial-gradient(rgb(var(--brand-primary) / 0.15) 1px, transparent 1px);
+  background-image: radial-gradient(color-mix(in srgb, var(--text-muted) 25%, transparent) 1.5px, transparent 1.5px);
+}
+
+/* Kalendár (vylepšené s fallbackom) */
+::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(var(--brand-hue, 25deg));
+  cursor: pointer;
 }
 
 /* Ostatné utility */
+[data-mode='light'] .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 @keyframes progressShrink { from { width: 100%; } to { width: 0%; } }
 .animate-progress-shrink { animation: progressShrink 5s linear forwards; }
-
-::-webkit-calendar-picker-indicator {
-  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(var(--brand-hue));
-  cursor: pointer;
-}

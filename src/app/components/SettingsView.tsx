@@ -38,9 +38,9 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
 
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in duration-500">
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
         <div className="flex items-center gap-3 mb-6 text-[var(--text-main)]">
-            <Target className="text-[rgb(var(--brand-primary))]" />
+            <Target className="text-[var(--brand-primary)]" />
             <h3 className="text-xl font-black uppercase tracking-widest">Celkový rozpočet</h3>
         </div>
         <div className="relative max-w-xs">
@@ -50,7 +50,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
                 onChange={(e) => setBudget(e.target.value)}
                 onBlur={saveBudget}
                 onKeyDown={(e) => e.key === 'Enter' && saveBudget()}
-                className="w-full bg-[var(--bg-main)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl px-4 py-3 pr-10 outline-none focus:border-[rgb(var(--brand-primary))] focus:ring-1 focus:ring-[rgb(var(--brand-primary))] transition-all"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl px-4 py-3 pr-10 outline-none focus:border-[rgb(var(--brand-primary))] focus:ring-1 focus:ring-[rgb(var(--brand-primary))] transition-all"
                 placeholder="0"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">€</span>
@@ -60,15 +60,15 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
         </p>
       </div>
 
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
         <h3 className="text-xl font-black mb-6 text-[var(--text-main)] uppercase tracking-widest">Režim zobrazenia</h3>
         <div className="flex gap-4">
           <button
             onClick={() => setMode('dark')}
             className={`flex-1 flex items-center justify-center gap-3 p-5 rounded-2xl border-2 transition-all cursor-pointer
               ${mode === 'dark' 
-                ? 'border-[rgb(var(--brand-primary))] bg-[var(--brand-light)] text-[rgb(var(--brand-primary))]' 
-                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--text-muted)]'}`}
+                ? 'border-[var(--brand-primary)] bg-[var(--brand-light)] text-[var(--brand-primary)]' 
+                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--brand-primary)]'}`}
           >
             <Moon size={20} />
             <span className="font-bold">Tmavý režim</span>
@@ -78,8 +78,8 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
             onClick={() => setMode('light')}
             className={`flex-1 flex items-center justify-center gap-3 p-5 rounded-2xl border-2 transition-all cursor-pointer
               ${mode === 'light' 
-                ? 'border-[rgb(var(--brand-primary))] bg-[var(--brand-light)] text-[rgb(var(--brand-primary))]' 
-                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--text-muted)]'}`}
+                ? 'border-[var(--brand-primary)] bg-[var(--brand-light)] text-[var(--brand-primary)]' 
+                : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--brand-primary)]'}`}
           >
             <Sun size={20} />
             <span className="font-bold">Svetlý režim</span>
@@ -87,7 +87,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
         </div>
       </div>
 
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-2xl">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
         <h3 className="text-xl font-black mb-6 text-[var(--text-main)] uppercase tracking-widest">Farebná téma</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {themes.map((t) => (
@@ -96,8 +96,8 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
               onClick={() => setTheme(t.id as any)}
               className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center gap-3
                 ${theme === t.id 
-                  ? 'border-[rgb(var(--brand-primary))] bg-[var(--brand-light)]' 
-                  : 'border-[var(--border-color)] hover:border-[var(--text-muted)]'}`}
+                  ? 'border-[var(--brand-primary)] bg-[var(--brand-light)]' 
+                  : 'border-[var(--border-color)] hover:border-[var(--brand-primary)]'}`}
             >
               <div className={`w-10 h-10 rounded-full ${t.color} shadow-lg shadow-black/20`} />
               <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-main)]">{t.name}</span>

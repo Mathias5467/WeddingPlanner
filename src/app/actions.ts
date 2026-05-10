@@ -15,12 +15,14 @@ export async function addGuest(formData: FormData) {
   const name = formData.get('name') as string;
   const side = formData.get('side') as string;
   const status = formData.get('status') as string;
+  const alergies = formData.get('alergies') as string;
   const note = formData.get('note') as string;
   
   if (!name) return;
 
-  const stmt = db.prepare("INSERT INTO guests (name, family_side, status, note) VALUES (?, ?, ?, ?)");
-  stmt.run(name, side, status, note);
+  const stmt = db.prepare("INSERT INTO guests (name, family_side, status, alergies, note) VALUES (?, ?, ?, ?, ?)");
+  
+  stmt.run(name, side, status, alergies, note);
   
   revalidatePath('/');
 }
@@ -29,10 +31,12 @@ export async function updateGuest(id: number, formData: FormData) {
   const name = formData.get('name') as string;
   const side = formData.get('side') as string;
   const status = formData.get('status') as string;
+  const alergies = formData.get('alergies') as string;
   const note = formData.get('note') as string;
 
-  const stmt = db.prepare("UPDATE guests SET name = ?, family_side = ?, status = ?, note = ? WHERE id = ?");
-  stmt.run(name, side, status, note, id);
+  const stmt = db.prepare("UPDATE guests SET name = ?, family_side = ?, status = ?, alergies = ?, note = ? WHERE id = ?");
+  
+  stmt.run(name, side, status, alergies, note, id);
 
   revalidatePath('/');
 }

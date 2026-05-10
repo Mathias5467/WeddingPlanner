@@ -23,10 +23,10 @@ export function DeleteModal({ isOpen, onClose, onConfirm, text }: DeleteModalPro
             Táto akcia je nenávratná.
           </p>
           <div className="flex w-full gap-3">
-            <button onClick={onClose} className="flex-1 px-4 py-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold transition-all cursor-pointer">
+            <button onClick={onClose} className="flex-1 px-4 py-4 rounded-2xl border border-[var(--text-main)] text-[var(--text-main)] font-bold transition-all cursor-pointer">
               Zrušiť
             </button>
-            <button onClick={onConfirm} className="flex-1 px-4 py-4 rounded-2xl bg-red-600 hover:bg-red-500 text-[var(--text-main)] font-bold transition-all cursor-pointer shadow-lg shadow-red-600/20">
+            <button onClick={onConfirm} className="flex-1 px-4 py-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold transition-all cursor-pointer shadow-lg shadow-red-600/20">
               Vymazať
             </button>
           </div>
