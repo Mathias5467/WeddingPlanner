@@ -52,7 +52,7 @@ const inputStyles = "w-full bg-[var(--bg-input)] border border-[var(--border-col
   return (
     <div className="w-full animate-in fade-in duration-500 space-y-6">
       
-      <div className="flex flex-wrap gap-4 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-5 rounded-[1rem] shadow-2xl">
+      <div className="flex flex-wrap gap-4 items-center justify-between bg-[var(--bg-card)] border border-[var(--border-color)]/60 p-5 rounded-[1rem] shadow-lg">
         <div className="flex-1 min-w-[300px] relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
           <input 
@@ -105,7 +105,7 @@ const inputStyles = "w-full bg-[var(--bg-input)] border border-[var(--border-col
         </div>
 
         <div className="md:col-span-1 flex items-end">
-          <button type="submit" className="w-full h-[42px] bg-[var(--brand-primary)] hover:bg-[var(--brand-hover)] text-white rounded-[0.8rem] font-black transition-all active:scale-95 shadow-xl shadow-[var(--brand-primary)] flex items-center justify-center cursor-pointer">
+          <button type="submit" className="w-full h-[42px] bg-[var(--brand-primary)] hover:bg-[var(--brand-hover)] text-white rounded-[0.8rem] font-black transition-all active:scale-95 shadow-lg shadow-[var(--brand-primary)] flex items-center justify-center cursor-pointer">
             <Plus size={28} />
           </button>
         </div>
@@ -192,7 +192,7 @@ const inputStyles = "w-full bg-[var(--bg-input)] border border-[var(--border-col
               setTaskToEdit(null);
               loadTasks();
             }}
-            className="relative bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] w-full max-w-xl shadow-2xl animate-in zoom-in-95 space-y-6"
+            className="relative bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] w-full max-w-xl shadow-lg animate-in zoom-in-95 space-y-6"
           >
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight">Upraviť úlohu</h3>

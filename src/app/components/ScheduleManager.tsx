@@ -72,10 +72,11 @@ export function ScheduleManager() {
 
       const dataUrl = await toPng(element, {
         quality: 1,
-        pixelRatio: 3,
+        pixelRatio: 5,
         backgroundColor: '#ffffff',
+        width: 1200,
         style: {
-          width: '900px',
+          width: '1200px',
           padding: '0px',
         },
         filter: (node) => {
@@ -89,7 +90,7 @@ export function ScheduleManager() {
 
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = 210;
-      const margin = 15;
+      const margin = 5;
       const availableWidth = pdfWidth - (margin * 2);
 
       const imgProps = pdf.getImageProperties(dataUrl);
