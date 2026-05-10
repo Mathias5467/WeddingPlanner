@@ -20,10 +20,11 @@ import { SettingsView } from './components/SettingsView';
 import { DrinkCalculator } from './components/DrinkCalculator';
 import { ExpenseManager } from './components/ExpenseManager';
 import { NotificationCenter } from './components/NotificationCenter';
+import { HomeView } from './components/HomeView';
 
 export default function WeddingPlanner() {
   const { theme, mode } = useTheme();
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState('Home');
   const [stats, setStats] = useState<any>(null);
   const [guests, setGuests] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]); 
@@ -40,6 +41,7 @@ export default function WeddingPlanner() {
   useEffect(() => { loadData(); }, [activeTab]);
 
   const navItems = [
+    { id: 'Home', name: 'Domov', icon: Heart },
     { id: 'Dashboard', name: 'Prehľad', icon: Home },
     { id: 'Guests', name: 'Hostia', icon: Users },
     { id: 'Expenses', name: 'Výdavky', icon: CreditCard },
@@ -107,15 +109,13 @@ export default function WeddingPlanner() {
         </header>
 
         <div className="flex-1 overflow-y-auto p-10 custom-scrollbar">
-          {activeTab === 'Dashboard' && (
-            <Dashboard 
-              stats={stats} 
-              onNavigate={(id: string) => {
+          {activeTab === 'Home' && (
+            <HomeView />
+          )}
+          {activeTab === 'Dashboard' && <Dashboard onNavigate={(id: string) => {
                 console.log("Prepínam na kartu:", id);
                 setActiveTab(id);
-              }} 
-            />
-          )}
+              }}  stats={stats}  />}
           {activeTab === 'Guests' && <GuestManager guests={guests} refresh={loadData} />}
           {activeTab === 'Expenses' && <ExpenseManager />}
           {activeTab === 'Tasks' && <TaskManager />}

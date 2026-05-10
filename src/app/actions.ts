@@ -315,30 +315,35 @@ export async function updateTargetBudget(amount: number) {
 }
 
 /* Dashboard */
+// V actions.ts upravte getDashboardStats:
 export async function getDashboardStats() {
   const targetBudgetRow = db.prepare("SELECT value FROM settings WHERE key = 'target_budget'").get() as any;
   const targetBudget = parseFloat(targetBudgetRow?.value || "12000"); 
-  // Počty podľa strán
-  const totalGuests = (db.prepare("SELECT COUNT(*) as count FROM guests").get() as any).count || 0;
-  const brideGuests = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Bride'").get() as any).count || 0;
-  const groomGuests = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Groom'").get() as any).count || 0;
-  const mutualGuests = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Mutual'").get() as any).count || 0;
+
+  // Počty hostí - pridávame Number() pre istotu
+  const totalGuests = Number((db.prepare("SELECT COUNT(*) as count FROM guests").get() as any).count || 0);
+  const brideGuests = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Bride'").get() as any).count || 0);
+  const groomGuests = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Groom'").get() as any).count || 0);
+  const mutualGuests = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE family_side='Mutual'").get() as any).count || 0);
 
   // Počty podľa stavu
-  const confirmed = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE status='Will Come'").get() as any).count || 0;
-  const declined = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE status='Won''t Come'").get() as any).count || 0;
-  const pending = (db.prepare("SELECT COUNT(*) as count FROM guests WHERE status IN ('Not Asked', 'Asked')").get() as any).count || 0;
+  const confirmed = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE status='Will Come'").get() as any).count || 0);
+  const declined = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE status='Won''t Come'").get() as any).count || 0);
+  const pending = Number((db.prepare("SELECT COUNT(*) as count FROM guests WHERE status IN ('Not Asked', 'Asked', 'Neoslovený', 'Oslovený')").get() as any).count || 0);
 
-  // Ostatné
-  const totalExp = (db.prepare("SELECT SUM(unit_price * quantity) as sum FROM expenses").get() as any).sum || 0;
-  const paidExp = (db.prepare("SELECT SUM(deposit) as sum FROM expenses").get() as any).sum || 0;
+  // Výdavky
+  const totalExp = Number((db.prepare("SELECT SUM(unit_price * quantity) as sum FROM expenses").get() as any).sum || 0);
+  const paidExp = Number((db.prepare("SELECT SUM(deposit) as sum FROM expenses").get() as any).sum || 0);
 
   const expensesByCategory = db.prepare(`
     SELECT ec.name, ec.color, COALESCE(SUM(e.unit_price * e.quantity), 0) as amount
     FROM expense_categories ec
     LEFT JOIN expenses e ON e.category_id = ec.id
     GROUP BY ec.id HAVING SUM(e.unit_price * e.quantity) > 0
-  `).all();
+  `).all().map((item: any) => ({
+    ...item,
+    amount: Number(item.amount) // Preistotu prekonvertovať na číslo
+  }));
 
   return { 
     totalGuests, brideGuests, groomGuests, mutualGuests,
@@ -357,4 +362,56 @@ export async function getUpcomingTasks() {
     WHERE completed = 0 AND due_date IS NOT NULL 
     ORDER BY due_date ASC
   `).all();
+}
+
+
+
+export async function getWeddingDate() {
+  const row = db.prepare("SELECT value FROM settings WHERE key = 'wedding_date'").get() as any;
+  return row?.value || null;
+}
+
+export async function updateWeddingDate(date: string) {
+  db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('wedding_date', ?)")
+    .run(date);
+  
+  revalidatePath('/'); 
+  return { success: true };
+}
+
+/* HOME ACTIONS */
+export async function getHomeData() {
+  const weddingDateRow = db.prepare("SELECT value FROM settings WHERE key = 'wedding_date'").get() as any;
+  const photos = db.prepare("SELECT * FROM couple_photos ORDER BY created_at DESC").all();
+  
+  return {
+    weddingDate: weddingDateRow?.value || null,
+    photos: photos as { id: number, path: string }[]
+  };
+}
+
+export async function uploadCouplePhoto(formData: FormData) {
+  const file = formData.get('file') as File;
+  if (!file || file.size === 0) return;
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const filename = `couple-${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
+  const uploadDir = path.join(process.cwd(), 'public/uploads/home');
+
+  // Vytvorenie priečinka ak neexistuje
+  await fs.mkdir(uploadDir, { recursive: true });
+  await fs.writeFile(path.join(uploadDir, filename), buffer);
+
+  db.prepare("INSERT INTO couple_photos (path) VALUES (?)")
+    .run(`/uploads/home/${filename}`);
+
+  revalidatePath('/');
+}
+
+export async function deleteCouplePhoto(id: number, filePath: string) {
+  try {
+    await fs.unlink(path.join(process.cwd(), 'public', filePath));
+  } catch (e) {}
+  db.prepare("DELETE FROM couple_photos WHERE id = ?").run(id);
+  revalidatePath('/');
 }

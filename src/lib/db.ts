@@ -121,7 +121,13 @@ db.exec(`
     value TEXT
     );
     INSERT OR IGNORE INTO settings (key, value) VALUES ('target_budget', '12000');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('wedding_date', '');
 
+  CREATE TABLE IF NOT EXISTS couple_photos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    path TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 const countCats = db.prepare('SELECT COUNT(*) as count FROM expense_categories').get() as { count: number };

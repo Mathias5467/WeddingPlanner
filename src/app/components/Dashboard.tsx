@@ -20,17 +20,17 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
   const isOverBudget = totalPlanned > budgetLimit;
 
   
-  const guestSideData = [
-    { name: 'Nevesta', count: stats.brideGuests, color: '#fb7185' },
-    { name: 'Ženích', count: stats.groomGuests, color: '#38bdf8' },
-    { name: 'Spoloční', count: stats.mutualGuests, color: 'var(--text-muted)' },
-  ];
+  const guestSideData = useMemo(() => [
+    { name: 'Nevesta', count: stats.brideGuests || 0, color: '#fb7185' },
+    { name: 'Ženích', count: stats.groomGuests || 0, color: '#38bdf8' },
+    { name: 'Spoloční', count: stats.mutualGuests || 0, color: '#94a3b8' },
+  ], [stats]);
 
-  const guestStatusData = [
-    { name: 'Prídu', count: stats.confirmed, color: '#10b981' },
-    { name: 'Neprídu', count: stats.declined, color: '#ef4444' },
-    { name: 'Čaká sa', count: stats.pending, color: '#f59e0b' },
-  ];
+  const guestStatusData = useMemo(() => [
+    { name: 'Prídu', count: stats.confirmed || 0, color: '#10b981' },
+    { name: 'Neprídu', count: stats.declined || 0, color: '#ef4444' },
+    { name: 'Čaká sa', count: stats.pending || 0, color: '#f59e0b' },
+  ], [stats]);
 
   const costPerPerson = stats.totalGuests > 0 ? totalPlanned / stats.totalGuests : 0;
 
@@ -62,24 +62,24 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Pomer strán hostí</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" key={`side-${stats.totalGuests}`}>
               <BarChart data={guestSideData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 'bold'}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} allowDecimals={false} />
                 <Tooltip 
-                  cursor={false} 
-                  contentStyle={{ 
-                    backgroundColor: 'var(--bg-card)', 
-                    border: '1px solid var(--border-color)', 
-                    borderRadius: '16px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)' 
-                  }}
-                  itemStyle={{ color: 'var(--text-main)', fontSize: '12px' }}
-                  formatter={(value: any) => [`${value} hostí`, 'Počet']}
+                  cursor={{fill: 'transparent'}} 
+                  contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px' }}
                 />
-                <Bar dataKey="count" radius={[10, 10, 0, 0]} barSize={50}>
-                  {guestSideData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+                <Bar 
+                  dataKey="count" 
+                  radius={[6, 6, 0, 0]} 
+                  barSize={50}
+                  isAnimationActive={false}
+                >
+                  {guestSideData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -89,24 +89,21 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Stav potvrdení</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" key={`status-${stats.totalGuests}`}>
               <BarChart data={guestStatusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 'bold'}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} />
-                <Tooltip 
-                  cursor={false}
-                  contentStyle={{ 
-                    backgroundColor: 'var(--bg-card)', 
-                    border: '1px solid var(--border-color)', 
-                    borderRadius: '16px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-                  }}
-                  itemStyle={{ color: 'var(--text-main)', fontSize: '12px' }}
-                  formatter={(value: any) => [`${Number(value).toLocaleString()}`, 'Počet']}
-                />
-                <Bar dataKey="count" radius={[10, 10, 0, 0]} barSize={50}>
-                  {guestStatusData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+                <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} allowDecimals={false} />
+                <Tooltip cursor={{fill: 'transparent'}} />
+                <Bar 
+                  dataKey="count" 
+                  radius={[6, 6, 0, 0]} 
+                  barSize={50}
+                  isAnimationActive={false} // VYPNUTIE ANIMÁCIE
+                >
+                  {guestStatusData.map((entry, index) => (
+                    <Cell key={`cell-status-${index}`} fill={entry.color} />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

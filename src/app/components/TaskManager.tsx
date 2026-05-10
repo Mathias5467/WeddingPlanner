@@ -192,34 +192,64 @@ const inputStyles = "w-full bg-[var(--bg-input)] border border-[var(--border-col
               setTaskToEdit(null);
               loadTasks();
             }}
-            className="relative bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] w-full max-w-xl shadow-lg animate-in zoom-in-95 space-y-6"
+            className="relative bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] w-full max-w-xl shadow-2xl animate-in zoom-in-95 space-y-6"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight">Upraviť úlohu</h3>
-              <button type="button" onClick={() => setTaskToEdit(null)} className="p-2 text-[var(--text-muted)] hover:bg-zinc-800 rounded-xl transition-colors cursor-pointer"><X size={24}/></button>
+              <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight uppercase">Upraviť úlohu</h3>
+              <button type="button" onClick={() => setTaskToEdit(null)} className="p-2 text-[var(--text-muted)] hover:bg-[var(--bg-input)] rounded-xl transition-colors cursor-pointer"><X size={24}/></button>
             </div>
 
             <div className="space-y-5">
+              {/* NÁZOV ÚLOHY */}
               <div>
                 <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-widest">Názov úlohy</label>
-                <input name="text" required defaultValue={taskToEdit.text} className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 mt-2 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner" />
+                <input 
+                  name="text" 
+                  autoComplete='off' 
+                  required 
+                  defaultValue={taskToEdit.text} 
+                  className="w-full h-[42px] bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-xl px-4 mt-2 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner font-medium" 
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <PremiumDatePicker name="due_date" label="Nový termín" defaultValue={taskToEdit.due_date} />
+                {/* DATE PICKER */}
+                <PremiumDatePicker 
+                  name="due_date" 
+                  label="Nový termín" 
+                  defaultValue={taskToEdit.due_date} 
+                />
+
+                {/* HASHTAGY */}
                 <div>
-                  <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-widest">Hashtagy</label>
-                  <div className="relative">
-                    <Hash className="absolute left-4 top-[28px] text-[var(--text-muted)]" size={18} />
-                    <input name="tags" defaultValue={taskToEdit.tags} placeholder="#tagy" className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl p-4 pl-12 mt-2 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner" />
+                  <label className="text-[10px] uppercase font-black text-[var(--text-muted)] ml-1 tracking-[0.2em] block mb-2">Hashtagy</label>
+                  <div className="relative mt-2">
+                    {/* Pridaná ikona # pre lepší look */}
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--brand-primary)] font-black text-sm">#</span>
+                    <input 
+                      name="tags" 
+                      defaultValue={taskToEdit.tags} 
+                      placeholder="fotograf, rezervácia" 
+                      className="w-full h-[42px] bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-xl pl-8 pr-4 text-sm outline-none focus:border-[var(--brand-primary)] shadow-inner" 
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* TLAČIDLÁ */}
             <div className="flex gap-4 pt-4">
-              <button type="button" onClick={() => setTaskToEdit(null)} className="flex-1 p-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold transition-all cursor-pointer">Zrušiť</button>
-              <button type="submit" className="flex-1 p-4 rounded-2xl bg-[var(--brand-primary)] hover:opacity-90 text-[var(--text-main)] font-black shadow-lg shadow-[var(--brand-primary)] cursor-pointer">
+              <button 
+                type="button" 
+                onClick={() => setTaskToEdit(null)} 
+                className="flex-1 h-[42px] rounded-xl  border text-[var(--text-muted)] font-bold transition-all cursor-pointer"
+              >
+                Zrušiť
+              </button>
+              <button 
+                type="submit" 
+                className="flex-1 h-[42px] rounded-xl bg-[var(--brand-primary)] hover:bg-[var(--brand-hover)] text-white font-black shadow-lg shadow-[var(--brand-primary)/0.2] cursor-pointer transition-all active:scale-95 uppercase text-xs tracking-widest"
+              >
                 Uložiť zmeny
               </button>
             </div>

@@ -1,20 +1,25 @@
 "use client";
 import { useTheme } from '../context/ThemeContext';
-import { Check, Moon, Sun, Target } from 'lucide-react';
-import { updateTargetBudget, getTargetBudget } from '../actions';
+import { Check, Moon, Sun, Target, Calendar } from 'lucide-react';
+import { updateTargetBudget, getTargetBudget, updateWeddingDate, getWeddingDate } from '../actions';
 import { useState, useEffect } from 'react';
+import { PremiumDatePicker } from './ui/PremiumDatePicker'; // Predpokladám cestu k tvojmu picker-u
 
 export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
   const { theme, mode, setTheme, setMode } = useTheme();
   const [budget, setBudget] = useState<string>("");
+  const [weddingDate, setWeddingDate] = useState<string>("");
 
   useEffect(() => {
     getTargetBudget().then(val => setBudget(String(val)));
+    getWeddingDate().then(date => setWeddingDate(date || ""));
   }, []);
 
-  const handleBudgetChange = async (val: string) => {
-    setBudget(val);
-    await updateTargetBudget(parseFloat(val) || 0);
+  // A funkcia na zmenu dátumu:
+  const handleDateChange = async (newDate: string) => {
+    setWeddingDate(newDate);
+    await updateWeddingDate(newDate);
+    onRefresh(); // Toto zabezpečí, že sa zmeny prejavia v celom WeddingPlanner
   };
 
   const saveBudget = async () => {
@@ -24,6 +29,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
       onRefresh();
     }
   };
+
 
   const themes = [
     { id: 'orange', name: 'Oranžová', color: 'bg-[#fb923c]' },
@@ -37,29 +43,52 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
   ];
 
   return (
-    <div className="max-w-4xl space-y-8 animate-in fade-in duration-500">
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
-        <div className="flex items-center gap-3 mb-6 text-[var(--text-main)]">
-            <Target className="text-[var(--brand-primary)]" />
-            <h3 className="text-xl font-black uppercase tracking-widest">Celkový rozpočet</h3>
+    <div className="max-w-4xl space-y-8 animate-in fade-in duration-500 pb-20">
+      
+      {/* SEKCE: ROZPOČET A DÁTUM */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Rozpočet */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
+            <div className="flex items-center gap-3 mb-6 text-[var(--text-main)]">
+                <Target className="text-[var(--brand-primary)]" />
+                <h3 className="text-xl font-black uppercase tracking-widest">Rozpočet</h3>
+            </div>
+            <div className="relative">
+                <input 
+                    type="number"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    onBlur={saveBudget}
+                    onKeyDown={(e) => e.key === 'Enter' && saveBudget()}
+                    className="w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl px-4 py-3 pr-10 outline-none focus:border-[var(--brand-primary)] transition-all font-mono font-bold"
+                    placeholder="0"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">€</span>
+            </div>
+            <p className="text-[10px] text-[var(--text-muted)] mt-4 uppercase font-bold tracking-tight">
+                Cieľový limit pre vaše výdavky.
+            </p>
         </div>
-        <div className="relative max-w-xs">
-            <input 
-                type="number"
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-                onBlur={saveBudget}
-                onKeyDown={(e) => e.key === 'Enter' && saveBudget()}
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-main)] rounded-2xl px-4 py-3 pr-10 outline-none focus:border-[rgb(var(--brand-primary))] focus:ring-1 focus:ring-[rgb(var(--brand-primary))] transition-all"
-                placeholder="0"
+
+        {/* Dátum Svadby */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
+            <div className="flex items-center gap-3 mb-6 text-[var(--text-main)]">
+                <Calendar className="text-[var(--brand-primary)]" />
+                <h3 className="text-xl font-black uppercase tracking-widest">Dátum Svadby</h3>
+            </div>
+            
+            {/* Použitie tvojho Custom Date Pickeru */}
+            <PremiumDatePicker 
+                name="wedding_date" 
+                label="" 
+                defaultValue={weddingDate}
+                onChange={handleDateChange} // Predpokladám, že tvoj picker má onChange prop
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-bold">€</span>
+
         </div>
-        <p className="text-xs text-[var(--text-muted)] mt-4">
-            Táto suma sa bude zobrazovať na Dashboarde ako váš cieľový limit.
-        </p>
       </div>
 
+      {/* REŽIM ZOBRAZENIA */}
       <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
         <h3 className="text-xl font-black mb-6 text-[var(--text-main)] uppercase tracking-widest">Režim zobrazenia</h3>
         <div className="flex gap-4">
@@ -71,7 +100,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
                 : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--brand-primary)]'}`}
           >
             <Moon size={20} />
-            <span className="font-bold">Tmavý režim</span>
+            <span className="font-bold uppercase text-xs tracking-widest">Tmavý režim</span>
           </button>
 
           <button
@@ -82,11 +111,12 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
                 : 'border-[var(--border-color)] text-[var(--text-muted)] hover:border-[var(--brand-primary)]'}`}
           >
             <Sun size={20} />
-            <span className="font-bold">Svetlý režim</span>
+            <span className="font-bold uppercase text-xs tracking-widest">Svetlý režim</span>
           </button>
         </div>
       </div>
 
+      {/* FAREBNÁ TÉMA */}
       <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
         <h3 className="text-xl font-black mb-6 text-[var(--text-main)] uppercase tracking-widest">Farebná téma</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -101,7 +131,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
             >
               <div className={`w-10 h-10 rounded-full ${t.color} shadow-lg shadow-black/20`} />
               <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-main)]">{t.name}</span>
-              {theme === t.id && <Check size={16} className="text-[rgb(var(--brand-primary))]" />}
+              {theme === t.id && <Check size={16} className="text-[var(--brand-primary)]" />}
             </button>
           ))}
         </div>

@@ -8,9 +8,10 @@ interface Props {
   name: string;
   label?: string;
   defaultValue?: string;
+  onChange?: (val: string) => void;
 }
 
-export function PremiumDatePicker({ name, label, defaultValue }: Props) {
+export function PremiumDatePicker({ name, label, defaultValue, onChange }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(defaultValue ? new Date(defaultValue) : null);
   const [viewDate, setViewDate] = useState(defaultValue ? new Date(defaultValue) : new Date());
@@ -45,11 +46,29 @@ export function PremiumDatePicker({ name, label, defaultValue }: Props) {
     setTime(prev => ({ ...prev, [key]: String(num).padStart(2, '0') }));
   };
 
+  const handleConfirm = () => {
+    const finalDate = formatDateForInput();
+    if (onChange) onChange(finalDate);
+    setIsOpen(false);
+  };
+
   const formatDateForInput = () => {
     if (!selectedDate) return "";
     const d = selectedDate;
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${time.h || '00'}:${time.m || '00'}`;
   };
+
+  React.useEffect(() => {
+    if (defaultValue) {
+      setSelectedDate(new Date(defaultValue));
+      setViewDate(new Date(defaultValue));
+      const d = new Date(defaultValue);
+      setTime({
+        h: String(d.getHours()).padStart(2, '0'),
+        m: String(d.getMinutes()).padStart(2, '0')
+      });
+    }
+  }, [defaultValue]); 
 
   return (
     <div className="w-full">
@@ -144,7 +163,7 @@ export function PremiumDatePicker({ name, label, defaultValue }: Props) {
 
                 <button
                   type="button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleConfirm}
                   className="w-full mt-10 bg-[var(--brand-primary)] hover:brightness-110 text-white py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 shadow-xl shadow-[var(--brand-primary)] cursor-pointer"
                 >
                   Potvrdiť termín

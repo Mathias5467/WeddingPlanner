@@ -64,20 +64,25 @@ export function CustomDropdown({
 
       {isOpen && (
         <div 
-          className={`absolute z-[999] w-full min-w-[160px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-visible animate-in fade-in zoom-in-95 duration-200
+          className={`absolute z-[999] w-full min-w-[160px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden animate-in fade-in zoom-in-95 duration-200
             ${openUp ? 'bottom-full mb-2 slide-in-from-bottom-2' : 'top-full mt-2 slide-in-from-top-2'}`}
         >
-          <div className="max-h-60">
+          <div className="max-h-60 overflow-y-auto custom-scrollbar py-1">
             {options.map((opt) => (
               <div
                 key={opt.value}
                 onClick={() => { setSelected(opt.value); setIsOpen(false); }}
-                className={`px-4 py-2.5 text-[11px] cursor-pointer transition-colors flex items-center justify-between`}
+                className={`px-4 py-3 text-[11px] cursor-pointer transition-colors flex items-center justify-between hover:bg-[var(--brand-light)]/10
+                  ${selected === opt.value ? 'bg-[var(--brand-light)]/5' : ''}`}
               >
-                <span className={`px-2 py-0.5 rounded-md text- font-bold border ${opt.color}`}>
+                <span className={`px-2 py-0.5 rounded-md font-bold border ${opt.color}`}>
                   {opt.label}
                 </span>
-                {selected === opt.value && <Check size={20} className="text-[var(--brand-primary)]" />}
+                {selected === opt.value && (
+                   <div className="bg-[var(--brand-primary)] p-0.5 rounded-full">
+                      <Check size={12} className="text-white" />
+                   </div>
+                )}
               </div>
             ))}
           </div>
