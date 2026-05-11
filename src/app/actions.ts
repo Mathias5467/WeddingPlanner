@@ -214,7 +214,8 @@ export async function updateTask(id: number, formData: FormData) {
 export async function getSchedule() {
   const userId = await getUserId();
   const { rows } = await db.execute({ sql: "SELECT * FROM schedule WHERE user_id = ? ORDER BY time ASC", args: [userId] });
-  return rows;
+  
+  return rows.map(r => ({ ...r })); 
 }
 
 export async function addScheduleItem(formData: FormData) {
