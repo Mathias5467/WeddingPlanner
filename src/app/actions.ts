@@ -530,18 +530,32 @@ export async function getHomeData() {
 }
 
 export async function uploadCouplePhoto(formData: FormData) {
-  const userId = await getUserId();
-  const file = formData.get('file') as File;
-  if (!file || file.size === 0) return;
+  try {
+    const userId = await getUserId();
+    const file = formData.get('file') as File;
+    
+    console.log("Začínam upload pre usera:", userId, "Súbor:", file?.name);
 
-  const response = await utapi.uploadFiles(file);
+    if (!file || file.size === 0) {
+      console.error("Žiadny súbor nebol prijatý");
+      return;
+    }
 
-  if (response.data) {
-    await db.execute({
-      sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
-      args: [userId, response.data.url]
-    });
-    revalidatePath('/');
+    const response = await utapi.uploadFiles(file);
+    console.log("UploadThing odpoveď:", response);
+
+    if (response.data) {
+      await db.execute({
+        sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
+        args: [userId, response.data.url]
+      });
+      console.log("Zapísané do DB");
+      revalidatePath('/');
+    } else {
+      console.error("UploadThing nevrátil dáta:", response.error);
+    }
+  } catch (error) {
+    console.error("Kritická chyba pri uploade:", error);
   }
 }
 
