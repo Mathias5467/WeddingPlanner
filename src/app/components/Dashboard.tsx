@@ -62,7 +62,11 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Pomer strán hostí</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%" key={`side-${stats.totalGuests}`}>
+            <ResponsiveContainer 
+              width="100%" 
+              height="100%" 
+              key={`side-${stats.brideGuests}-${stats.groomGuests}-${stats.mutualGuests}`}
+            >
               <BarChart data={guestSideData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 'bold'}} />
@@ -89,7 +93,11 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
         <div className="bg-[var(--bg-card)] border border-[var(--border-color)] p-8 rounded-[2.5rem] shadow-lg">
           <h3 className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest mb-8">Stav potvrdení</h3>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%" key={`status-${stats.totalGuests}`}>
+            <ResponsiveContainer 
+              width="100%" 
+              height="100%" 
+              key={`status-${stats.confirmed}-${stats.declined}-${stats.pending}`}
+            >
               <BarChart data={guestStatusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 'bold'}} />

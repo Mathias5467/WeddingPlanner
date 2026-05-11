@@ -8,18 +8,27 @@ export function CustomDropdown({
   name, 
   options, 
   defaultValue,
-  height = "h-[42px]"
+  height = "h-[42px]",
+  form // PRIDANÉ: Prop pre prepojenie s externým formulárom
 }: { 
   label?: string, 
   name: string, 
   options: any[], 
   defaultValue?: string,
-  height?: string 
+  height?: string,
+  form?: string // Typ pre form prop
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [openUp, setOpenUp] = useState(false);
   const [selected, setSelected] = useState(defaultValue || (options.length > 0 ? options[0].value : ''));
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // PRIDANÉ: Synchronizácia stavu, keď sa zmení defaultValue (napr. pri načítaní dát alebo prepnutí tabu)
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      setSelected(defaultValue);
+    }
+  }, [defaultValue]);
 
   const currentOption = options.find(o => o.value === selected) || options[0] || { label: 'Vyberte...', color: '' };
 
@@ -48,13 +57,14 @@ export function CustomDropdown({
         </label>
       )}
       
-      <input type="hidden" name={name} value={selected || ''} />
+      {/* OPRAVA: Pridaný atribút form do skrytého inputu */}
+      <input type="hidden" name={name} value={selected || ''} form={form} />
       
       <button
         type="button"
         onClick={handleToggle}
         className={`w-full flex items-center px-4 justify-between bg-[var(--bg-input)] border text-xs rounded-xl px-3 outline-none transition-all ${height}
-          ${isOpen ? 'border-[var(--brand-primary)] focus:border-[var(--brand-primary))] focus:shadow-[0_0_5px_var(--brand-primary)] ring-[var(--brand-primary)]' : 'border-[var(--border-color)]'}`}
+          ${isOpen ? 'border-[var(--brand-primary)]' : 'border-[var(--border-color)]'}`}
       >
         <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${currentOption.color}`}>
           {currentOption.label}

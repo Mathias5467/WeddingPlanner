@@ -129,12 +129,22 @@ export function GuestManager({ guests, refresh }: { guests: any[], refresh: () =
                     </td>
                     <td className="px-3">
                       <div className="flex items-center h-full">
-                        <CustomDropdown name="side" options={SIDE_OPTIONS} defaultValue={guest.family_side} />
+                        <CustomDropdown 
+                          name="side" 
+                          options={SIDE_OPTIONS} 
+                          defaultValue={guest.family_side} 
+                          form={`edit-form-${guest.id}`}
+                        />
                       </div>
                     </td>
                     <td className="px-3">
                       <div className="flex items-center h-full">
-                        <CustomDropdown name="status" options={STATUS_OPTIONS} defaultValue={guest.status} />
+                        <CustomDropdown 
+                          name="status" 
+                          options={STATUS_OPTIONS} 
+                          defaultValue={guest.status} 
+                          form={`edit-form-${guest.id}`}
+                        />
                       </div>
                     </td>
                     <td className="px-3">
