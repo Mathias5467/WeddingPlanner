@@ -9,21 +9,21 @@ export function CustomDropdown({
   options, 
   defaultValue,
   height = "h-[42px]",
-  form // PRIDANÉ: Prop pre prepojenie s externým formulárom
+  form 
 }: { 
   label?: string, 
   name: string, 
   options: any[], 
   defaultValue?: string,
   height?: string,
-  form?: string // Typ pre form prop
+  form?: string 
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [openUp, setOpenUp] = useState(false);
   const [selected, setSelected] = useState(defaultValue || (options.length > 0 ? options[0].value : ''));
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // PRIDANÉ: Synchronizácia stavu, keď sa zmení defaultValue (napr. pri načítaní dát alebo prepnutí tabu)
+  
   useEffect(() => {
     if (defaultValue !== undefined) {
       setSelected(defaultValue);

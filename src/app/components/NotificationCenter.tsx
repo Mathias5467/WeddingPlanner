@@ -11,13 +11,13 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
   const [now, setNow] = useState(new Date());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 1. Aktualizácia času každú minútu
+  
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
-  // 2. Logika filtrovania úloh (reaguje na zmenu tasks aj času)
+  
   const activeNotifications = useMemo(() => {
     if (!tasks) return [];
     const weekFromNow = new Date(now);
@@ -32,7 +32,7 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
     }).sort((a, b) => new Date(a.due_date || a.date).getTime() - new Date(b.due_date || b.date).getTime());
   }, [tasks, now]);
 
-  // 3. INTELIGENTNÁ LOGIKA PRE TOAST (Už nebude vyskakovať pri preklikávaní tabov)
+  
   useEffect(() => {
     const currentCount = activeNotifications.length;
     if (currentCount === 0) {
@@ -41,30 +41,28 @@ export function NotificationCenter({ tasks }: { tasks: any[] }) {
       return;
     }
 
-    // Získame posledný známy počet z pamäte prehliadača
     const savedCountStr = sessionStorage.getItem('wedding_last_count');
     const savedCount = savedCountStr === null ? -1 : parseInt(savedCountStr);
 
-    // Prípad 1: Prvýkrát prichádzame do appky (v rámci tejto session)
+    
     if (savedCount === -1) {
       const firstTask = activeNotifications[0];
       setToastTaskName(firstTask?.text || firstTask?.title || "Máte urgentné úlohy");
       setShowToast(true);
     } 
-    // Prípad 2: Pribudla ÚPLNE NOVÁ urgentná úloha (počet sa zvýšil)
+    
     else if (currentCount > savedCount) {
-      // Nájdeme názov úlohy, ktorá je nová alebo najurgentnejšia
+      
       const latestTask = activeNotifications[0];
       setToastTaskName(latestTask?.text || latestTask?.title || "Nová úloha v zozname");
       setShowToast(true);
     }
 
-    // Vždy aktualizujeme sessionStorage, aby sme vedeli, že tento počet sme už "videli"
+    
     sessionStorage.setItem('wedding_last_count', currentCount.toString());
 
-  }, [activeNotifications.length]); // Sledujeme len zmenu počtu úloh
+  }, [activeNotifications.length]); 
 
-  // Zatvorenie dropdownu pri kliknutí mimo
   useEffect(() => {
     const clickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setIsOpen(false);

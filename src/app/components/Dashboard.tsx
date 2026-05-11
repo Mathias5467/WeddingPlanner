@@ -107,7 +107,7 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
                   dataKey="count" 
                   radius={[6, 6, 0, 0]} 
                   barSize={50}
-                  isAnimationActive={false} // VYPNUTIE ANIMÁCIE
+                  isAnimationActive={false} 
                 >
                   {guestStatusData.map((entry, index) => (
                     <Cell key={`cell-status-${index}`} fill={entry.color} />

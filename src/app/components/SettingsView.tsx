@@ -3,7 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { Check, Moon, Sun, Target, Calendar } from 'lucide-react';
 import { updateTargetBudget, getTargetBudget, updateWeddingDate, getWeddingDate } from '../actions';
 import { useState, useEffect } from 'react';
-import { PremiumDatePicker } from './ui/PremiumDatePicker'; // Predpokladám cestu k tvojmu picker-u
+import { PremiumDatePicker } from './ui/PremiumDatePicker'; 
 
 export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
   const { theme, mode, setTheme, setMode } = useTheme();
@@ -15,11 +15,11 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
     getWeddingDate().then(date => setWeddingDate(date || ""));
   }, []);
 
-  // A funkcia na zmenu dátumu:
+  
   const handleDateChange = async (newDate: string) => {
     setWeddingDate(newDate);
     await updateWeddingDate(newDate);
-    onRefresh(); // Toto zabezpečí, že sa zmeny prejavia v celom WeddingPlanner
+    onRefresh(); 
   };
 
   const saveBudget = async () => {
@@ -82,7 +82,7 @@ export function SettingsView({ onRefresh }: { onRefresh: () => void }) {
                 name="wedding_date" 
                 label="" 
                 defaultValue={weddingDate}
-                onChange={handleDateChange} // Predpokladám, že tvoj picker má onChange prop
+                onChange={handleDateChange} 
             />
 
         </div>

@@ -7,7 +7,7 @@ interface Props {
   name: string;
   label: string;
   defaultValue?: number;
-  height?: string; // Pridaná vlastnosť height
+  height?: string; 
 }
 
 export function PremiumAmountInput({ name, label, defaultValue = 0, height = "h-[42px]" }: Props) {
@@ -35,7 +35,7 @@ export function PremiumAmountInput({ name, label, defaultValue = 0, height = "h-
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="0.00"
-          // Použitie dynamickej výšky a upravený padding
+          
           className={`w-full bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-main)] rounded-xl px-4 pr-12 outline-none transition-all focus:border-[var(--brand-primary)] focus:shadow-[0_0_15px_rgba(var(--brand-primary),0.1)] shadow-inner text-sm font-mono font-bold ${height}`}
         />
         

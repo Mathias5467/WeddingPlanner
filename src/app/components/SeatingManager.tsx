@@ -13,7 +13,7 @@ import {
 } from '../actions';
 import { DeleteModal } from './ui/DeleteModal';
 
-// --- Interfaces ---
+
 interface Table { id: number; name: string; shape: string; capacity: number; x_pos: number; y_pos: number; rotation: number; }
 interface Seat { id: number; table_id: number; guest_id: number; seat_number: number; guest_name: string; family_side: string; allergies?: string; }
 interface Guest { id: number; name: string; family_side: string; allergies?: string; }

@@ -150,7 +150,7 @@ export function ExpenseManager() {
   );
 }
 
-// --- SHARED FORM MODAL (Add & Edit) ---
+
 function ExpenseFormModal({ title, expense, categories, onClose, onSubmit }: any) {
   return (
     <div className="fixed inset-0 z-[600] flex items-center justify-center p-4">
@@ -213,7 +213,7 @@ function ExpenseFormModal({ title, expense, categories, onClose, onSubmit }: any
   );
 }
 
-// --- DETAILS MODAL ---
+
 function DetailsExpenseModal({ expense, totalGuests, onClose }: any) {
   const total = expense.unit_price * expense.quantity;
   const toPay = total - expense.deposit;
