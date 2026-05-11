@@ -30,7 +30,7 @@ export function ScheduleManager() {
 
   const loadData = async () => {
     const data = await getSchedule();
-    setItems(data as any as ScheduleItem[]);
+    setItems(data as unknown as ScheduleItem[]);
   };
 
   useEffect(() => { loadData(); }, []);
