@@ -6,6 +6,9 @@ import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
+import { UTApi } from "uploadthing/server";
+const utapi = new UTApi();
+
 
 
 async function getUserId() {
@@ -481,23 +484,30 @@ export async function uploadFile(formData: FormData) {
   const userId = await getUserId();
   const file = formData.get('file') as File;
   if (!file || file.size === 0) return;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const filename = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
-  const uploadDir = path.join(process.cwd(), 'public/uploads');
-  await fs.mkdir(uploadDir, { recursive: true });
-  await fs.writeFile(path.join(uploadDir, filename), buffer);
 
-  await db.execute({
-    sql: "INSERT INTO files (user_id, name, type, size, path) VALUES (?, ?, ?, ?, ?)",
-    args: [userId, file.name, file.type, file.size, `/uploads/${filename}`]
-  });
-  revalidatePath('/');
+  const response = await utapi.uploadFiles(file);
+  
+  if (response.data) {
+    const fileUrl = response.data.url;
+    const fileKey = response.data.key;
+
+    await db.execute({
+      sql: "INSERT INTO files (user_id, name, type, size, path) VALUES (?, ?, ?, ?, ?)",
+      args: [userId, file.name, file.type, file.size, fileUrl]
+    });
+    revalidatePath('/');
+  }
 }
 
 export async function deleteFile(id: number, filePath: string) {
   const userId = await getUserId();
+  
   await db.execute({ sql: "DELETE FROM files WHERE id = ? AND user_id = ?", args: [id, userId] });
-  try { await fs.unlink(path.join(process.cwd(), 'public', filePath)); } catch (e) {}
+  const fileKey = filePath.split("/f/")[1];
+  if (fileKey) {
+    await utapi.deleteFiles(fileKey);
+  }
+
   revalidatePath('/');
 }
 
@@ -523,24 +533,25 @@ export async function uploadCouplePhoto(formData: FormData) {
   const userId = await getUserId();
   const file = formData.get('file') as File;
   if (!file || file.size === 0) return;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const filename = `couple-${userId}-${Date.now()}`;
-  const uploadDir = path.join(process.cwd(), 'public/uploads/home');
-  await fs.mkdir(uploadDir, { recursive: true });
-  await fs.writeFile(path.join(uploadDir, filename), buffer);
 
-  await db.execute({
-    sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
-    args: [userId, `/uploads/home/${filename}`]
-  });
-  revalidatePath('/');
+  const response = await utapi.uploadFiles(file);
+
+  if (response.data) {
+    await db.execute({
+      sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
+      args: [userId, response.data.url]
+    });
+    revalidatePath('/');
+  }
 }
 
 export async function deleteCouplePhoto(id: number, filePath: string) {
   const userId = await getUserId();
-  const res = await db.execute({ sql: "DELETE FROM couple_photos WHERE id = ? AND user_id = ?", args: [id, userId] });
-  if (res.rowsAffected > 0) {
-    try { await fs.unlink(path.join(process.cwd(), 'public', filePath)); } catch (e) {}
+  await db.execute({ sql: "DELETE FROM couple_photos WHERE id = ? AND user_id = ?", args: [id, userId] });
+
+  const fileKey = filePath.split("/f/")[1];
+  if (fileKey) {
+    await utapi.deleteFiles(fileKey);
   }
   revalidatePath('/');
 }
