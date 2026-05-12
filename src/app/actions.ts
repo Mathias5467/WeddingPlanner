@@ -572,3 +572,11 @@ export async function deleteCouplePhoto(id: number, filePath: string) {
   }
   revalidatePath('/');
 }
+export async function savePhotoToDb(url: string) {
+  const userId = await getUserId();
+  await db.execute({
+    sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
+    args: [userId, url]
+  });
+  revalidatePath('/');
+}

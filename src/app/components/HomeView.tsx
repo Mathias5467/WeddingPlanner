@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Camera, Trash2, ChevronLeft, ChevronRight, Upload } from 'lucide-react';
-import { getHomeData, uploadCouplePhoto, deleteCouplePhoto } from '../actions';
+import { Heart, Camera, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getHomeData, deleteCouplePhoto, savePhotoToDb } from '../actions';
+import { UploadButton } from "@uploadthing/react";
+import type { OurFileRouter } from "../api/uploadthing/core";
 
 export function HomeView() {
   const [data, setData] = useState<{weddingDate: string | null, photos: any[]}>({ weddingDate: null, photos: [] });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState<any>(null);
-  const [isUploading, setIsUploading] = useState(false);
 
   const loadHome = async () => {
     const d = await getHomeData();
@@ -34,31 +35,6 @@ export function HomeView() {
     }
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    
-    const fd = new FormData();
-    fd.append('file', file);
-
-    try {
-      const res = await uploadCouplePhoto(fd);
-      if (res?.success) {
-        await loadHome(); 
-        setCurrentIndex(0);
-      } else {
-        alert("Chyba: " + (res?.error || "Neznámy problém"));
-      }
-    } catch (err) {
-      alert("Kritická chyba pri uploade");
-    } finally {
-      setIsUploading(false);
-      e.target.value = '';
-    }
-  };
-
   return (
     <div className="space-y-12 pb-20">
       {/* ODPOČÍTAVANIE */}
@@ -72,7 +48,7 @@ export function HomeView() {
       </div>
 
       {/* CAROUSEL */}
-      <div className="relative h-[500px] w-full rounded-[2rem] overflow-hidden group shadow-lg border border border-[var(--brand-primary)]">
+      <div className="relative h-[500px] w-full rounded-[2rem] overflow-hidden group shadow-lg border border-[var(--brand-primary)]">
         <AnimatePresence mode="wait">
           {data.photos.length > 0 ? (
             <motion.img
@@ -104,7 +80,7 @@ export function HomeView() {
           </>
         )}
 
-        {/* Tlačidlo na mazanie aktuálnej fotky */}
+        {/* Mazanie */}
         {data.photos.length > 0 && (
           <button 
             onClick={async () => {
@@ -112,27 +88,35 @@ export function HomeView() {
               setCurrentIndex(0);
               loadHome();
             }}
-            className="absolute top-6 right-6 p-3 bg-red-500/20 backdrop-blur-md text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all cursor-pointer opacity-0 group-hover:opacity-100"
+            className="absolute top-6 right-6 p-3 bg-red-500/20 backdrop-blur-md text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all cursor-pointer opacity-0 group-hover:opacity-100 z-50"
           >
             <Trash2 size={20} />
           </button>
         )}
 
-        {/* Upload overlay */}
-        <label className={`absolute bottom-6 right-6 p-4 bg-[var(--brand-primary)] text-white rounded-3xl shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-          {isUploading ? (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Nahrávam...
-            </div>
-          ) : (
-            <>
-              <Upload size={18} />
-              Pridať fotku
-            </>
-          )}
-          <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={isUploading} />
-        </label>
+        {/* Klientský Upload Button (Obchádza Vercel limity) */}
+        <div className="absolute bottom-6 right-6 z-50">
+            <UploadButton<OurFileRouter, "imageUploader">
+                endpoint="imageUploader"
+                onClientUploadComplete={async (res) => {
+                    if (res && res[0]) {
+                        await savePhotoToDb(res[0].url);
+                        await loadHome();
+                        setCurrentIndex(0);
+                    }
+                }}
+                onUploadError={(error: Error) => {
+                    alert(`Chyba: ${error.message}`);
+                }}
+                appearance={{
+                    button: "bg-[var(--brand-primary)] text-white rounded-3xl font-black text-xs uppercase tracking-widest px-8 py-7 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300",
+                    allowedContent: "hidden"
+                }}
+                content={{
+                    button: "Pridať fotku"
+                }}
+            />
+        </div>
       </div>
     </div>
   );
