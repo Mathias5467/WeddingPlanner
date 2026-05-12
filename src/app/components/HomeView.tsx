@@ -24,7 +24,10 @@ export function HomeView() {
 
   const calculateTimeLeft = () => {
     if (!data.weddingDate) return;
-    const difference = +new Date(data.weddingDate) - +new Date();
+    const weddingDateObj = new Date(data.weddingDate);
+    const now = new Date();
+    const difference = weddingDateObj.getTime() - now.getTime();
+    
     if (difference > 0) {
       setTimeLeft({
         dni: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -32,12 +35,13 @@ export function HomeView() {
         min: Math.floor((difference / 1000 / 60) % 60),
         sek: Math.floor((difference / 1000) % 60),
       });
+    } else {
+      setTimeLeft(null);
     }
   };
 
   return (
     <div className="space-y-12 pb-20">
-      {/* ODPOČÍTAVANIE */}
       <div className="flex justify-center gap-4 md:gap-8 text-center">
         {timeLeft ? Object.entries(timeLeft).map(([label, value]) => (
           <div key={label} className="bg-[var(--bg-card)] border border-[var(--border-color)] p-4 md:p-6 rounded-[2rem] min-w-[80px] md:min-w-[120px] shadow-xl">
@@ -47,13 +51,12 @@ export function HomeView() {
         )) : <div className="text-[var(--text-muted)] italic font-serif">Nastavte dátum svadby v nastaveniach...</div>}
       </div>
 
-      {/* CAROUSEL */}
       <div className="relative h-[500px] w-full rounded-[2rem] overflow-hidden group shadow-lg border border-[var(--brand-primary)]">
         <AnimatePresence mode="wait">
           {data.photos.length > 0 ? (
             <motion.img
-              key={data.photos[currentIndex].id}
-              src={data.photos[currentIndex].path}
+              key={data.photos[currentIndex]?.id}
+              src={data.photos[currentIndex]?.path}
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
@@ -68,19 +71,17 @@ export function HomeView() {
           )}
         </AnimatePresence>
 
-        {/* Ovládanie carouselu */}
         {data.photos.length > 1 && (
           <>
-            <button onClick={() => setCurrentIndex((prev) => (prev === 0 ? data.photos.length - 1 : prev - 1))} className="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100">
+            <button onClick={() => setCurrentIndex((prev) => (prev === 0 ? data.photos.length - 1 : prev - 1))} className="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100 z-40">
               <ChevronLeft size={24} />
             </button>
-            <button onClick={() => setCurrentIndex((prev) => (prev === data.photos.length - 1 ? 0 : prev + 1))} className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100">
+            <button onClick={() => setCurrentIndex((prev) => (prev === data.photos.length - 1 ? 0 : prev + 1))} className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100 z-40">
               <ChevronRight size={24} />
             </button>
           </>
         )}
 
-        {/* Mazanie */}
         {data.photos.length > 0 && (
           <button 
             onClick={async () => {
@@ -94,28 +95,32 @@ export function HomeView() {
           </button>
         )}
 
-        {/* Klientský Upload Button (Obchádza Vercel limity) */}
+        {/* CLOUD UPLOAD BUTTON */}
         <div className="absolute bottom-6 right-6 z-50">
-            <UploadButton<OurFileRouter, "imageUploader">
-                endpoint="imageUploader"
-                onClientUploadComplete={async (res) => {
-                    if (res && res[0]) {
-                        await savePhotoToDb(res[0].url);
-                        await loadHome();
-                        setCurrentIndex(0);
-                    }
-                }}
-                onUploadError={(error: Error) => {
-                    alert(`Chyba: ${error.message}`);
-                }}
-                appearance={{
-                    button: "bg-[var(--brand-primary)] text-white rounded-3xl font-black text-xs uppercase tracking-widest px-8 py-7 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300",
-                    allowedContent: "hidden"
-                }}
-                content={{
-                    button: "Pridať fotku"
-                }}
-            />
+          <UploadButton<OurFileRouter, "imageUploader">
+            endpoint="imageUploader"
+            onClientUploadComplete={async (res) => {
+              if (res && res.length > 0) {
+                const cloudUrl = res[0].url;
+                console.log("Cloud URL:", cloudUrl);
+                await savePhotoToDb(cloudUrl);
+                await loadHome();
+                setCurrentIndex(0);
+                alert("Fotka úspešne nahraná do cloudu!");
+              }
+            }}
+            onUploadError={(error: Error) => {
+              console.error("UploadThing error:", error.message);
+              alert(`Chyba pri nahrávaní: ${error.message}`);
+            }}
+            appearance={{
+              button: "bg-[var(--brand-primary)] text-white rounded-3xl font-black text-xs uppercase tracking-widest px-8 py-7 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300",
+              allowedContent: "hidden"
+            }}
+            content={{
+              button: "Pridať fotku"
+            }}
+          />
         </div>
       </div>
     </div>
