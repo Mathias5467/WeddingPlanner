@@ -5,11 +5,21 @@ import { Heart, Camera, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getHomeData, deleteCouplePhoto, savePhotoToDb } from '../actions';
 import { UploadButton } from "@uploadthing/react";
 import type { OurFileRouter } from "../api/uploadthing/core";
+import { NotificationToast, NotificationType } from './ui/NotificationToast';
 
 export function HomeView() {
   const [data, setData] = useState<{weddingDate: string | null, photos: any[]}>({ weddingDate: null, photos: [] });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState<any>(null);
+  const [notify, setNotify] = useState<{ msg: string, type: NotificationType, show: boolean }>({
+    msg: "",
+    type: "info",
+    show: false
+  });
+
+  const showNotification = (msg: string, type: NotificationType) => {
+    setNotify({ msg, type, show: true });
+  };
 
   const loadHome = async () => {
     const d = await getHomeData();
@@ -42,6 +52,12 @@ export function HomeView() {
 
   return (
     <div className="space-y-12 pb-20">
+      <NotificationToast 
+        isVisible={notify.show}
+        message={notify.msg}
+        type={notify.type}
+        onClose={() => setNotify(prev => ({ ...prev, show: false }))}
+      />
       <div className="flex justify-center gap-4 md:gap-8 text-center">
         {timeLeft ? Object.entries(timeLeft).map(([label, value]) => (
           <div key={label} className="bg-[var(--bg-card)] border border-[var(--border-color)] p-4 md:p-6 rounded-[2rem] min-w-[80px] md:min-w-[120px] shadow-xl">
@@ -101,21 +117,19 @@ export function HomeView() {
             endpoint="imageUploader"
             onClientUploadComplete={async (res) => {
               if (res && res.length > 0) {
-                const cloudUrl = res[0].url;
-                console.log("Cloud URL:", cloudUrl);
-                await savePhotoToDb(cloudUrl);
+                await savePhotoToDb(res[0].url);
                 await loadHome();
                 setCurrentIndex(0);
-                alert("Fotka úspešne nahraná do cloudu!");
+                showNotification("Fotka bola úspešne pridaná do vášho albumu.", "success");
               }
             }}
             onUploadError={(error: Error) => {
-              console.error("UploadThing error:", error.message);
-              alert(`Chyba pri nahrávaní: ${error.message}`);
+              showNotification(`Nahrávanie zlyhalo: ${error.message}`, "error");
             }}
             appearance={{
-              button: "bg-[var(--brand-primary)] text-white rounded-3xl font-black text-xs uppercase tracking-widest px-8 py-7 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300",
-              allowedContent: "hidden"
+              container: "relative overflow-hidden", 
+              button: "bg-[var(--brand-primary)] text-white rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest px-8 py-6 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300",
+              allowedContent: "hidden",
             }}
             content={{
               button: "Pridať fotku"

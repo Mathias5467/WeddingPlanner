@@ -123,3 +123,16 @@ input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 @keyframes progressShrink { from { width: 100%; } to { width: 0%; } }
 .animate-progress-shrink { animation: progressShrink 5s linear forwards; }
+
+
+input[type="file"]::file-selector-button {
+  display: none;
+}
+
+label[data-ut-element="button"] {
+  font-size: 0 !important;
+}
+
+label[data-ut-element="button"] * {
+  font-size: 11px !important;
+}
