@@ -136,3 +136,15 @@ label[data-ut-element="button"] {
 label[data-ut-element="button"] * {
   font-size: 11px !important;
 }
+
+[data-ut-element="allowed-content"] {
+  display: none !important;
+}
+
+.ut-allowed-content {
+  display: none !important;
+}
+
+.ut-label {
+  display: none !important;
+}
