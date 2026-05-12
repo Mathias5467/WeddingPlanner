@@ -521,11 +521,21 @@ export async function renameFile(id: number, newName: string) {
 export async function getHomeData() {
   const userId = await getUserId();
   const weddingDate = await getWeddingDate();
-  const { rows: photosRows } = await db.execute({ sql: "SELECT * FROM couple_photos WHERE user_id = ? ORDER BY created_at DESC", args: [userId] });
   
-  return { 
-    weddingDate, 
-    photos: photosRows.map(r => ({ ...r })) 
+  const { rows: userRows } = await db.execute({
+    sql: "SELECT couple_name FROM users WHERE id = ?",
+    args: [userId]
+  });
+
+  const { rows: photosRows } = await db.execute({
+    sql: "SELECT * FROM couple_photos WHERE user_id = ? ORDER BY created_at DESC",
+    args: [userId]
+  });
+
+  return {
+    weddingDate: weddingDate ? String(weddingDate) : null,
+    coupleName: String(userRows[0]?.couple_name || "Naša Svadba"), 
+    photos: photosRows.map(r => ({ ...r }))
   };
 }
 
