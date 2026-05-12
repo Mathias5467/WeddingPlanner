@@ -563,14 +563,28 @@ export async function uploadCouplePhoto(formData: FormData) {
 }
 
 export async function deleteCouplePhoto(id: number, filePath: string) {
-  const userId = await getUserId();
-  await db.execute({ sql: "DELETE FROM couple_photos WHERE id = ? AND user_id = ?", args: [id, userId] });
+  try {
+    const userId = await getUserId();
 
-  const fileKey = filePath.split("/f/")[1];
-  if (fileKey) {
-    await utapi.deleteFiles(fileKey);
+    const res = await db.execute({
+      sql: "DELETE FROM couple_photos WHERE id = ? AND user_id = ?",
+      args: [id, userId]
+    });
+    if (res.rowsAffected > 0) {
+      const fileKey = filePath.split("/f/")[1];
+
+      if (fileKey) {
+        console.log("Mažem súbor z cloudu s kľúčom:", fileKey);
+        await utapi.deleteFiles(fileKey);
+      }
+    }
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error("Chyba pri mazaní fotky:", error);
+    return { success: false };
   }
-  revalidatePath('/');
 }
 
 export async function savePhotoToDb(url: string) {
