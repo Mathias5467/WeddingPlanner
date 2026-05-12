@@ -73,7 +73,8 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
                 <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} allowDecimals={false} />
                 <Tooltip 
                   cursor={{fill: 'transparent'}} 
-                  contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: '5px 5px 5px rgba(0,0,0,0.2)' }}
+                  itemStyle={{ color: 'var(--text-main)', fontSize: '12px' }}
                 />
                 <Bar 
                   dataKey="count" 
@@ -102,7 +103,10 @@ export function Dashboard({ stats, onNavigate }: { stats: any, onNavigate: (id: 
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12, fontWeight: 'bold'}} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--text-muted)', fontSize: 12}} allowDecimals={false} />
-                <Tooltip cursor={{fill: 'transparent'}} />
+                <Tooltip 
+                        cursor={{fill: 'transparent'}} 
+                        contentStyle={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', boxShadow: '5px 5px 5px rgba(0,0,0,0.2)' }}
+                        itemStyle={{ color: 'var(--text-main)', fontSize: '12px' }} />
                 <Bar 
                   dataKey="count" 
                   radius={[6, 6, 0, 0]} 
