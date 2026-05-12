@@ -533,29 +533,32 @@ export async function uploadCouplePhoto(formData: FormData) {
   try {
     const userId = await getUserId();
     const file = formData.get('file') as File;
-    
-    console.log("Začínam upload pre usera:", userId, "Súbor:", file?.name);
 
     if (!file || file.size === 0) {
-      console.error("Žiadny súbor nebol prijatý");
-      return;
+      return { success: false, error: "Súbor sa nepodarilo prijať na serveri." };
+    }
+    console.log(`Nahrávam súbor: ${file.name}, Veľkosť: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+
+    if (file.size > 4.5 * 1024 * 1024) {
+      return { success: false, error: "Súbor je príliš veľký pre bezplatný hosting (limit 4.5MB). Skúste menšiu fotku." };
     }
 
     const response = await utapi.uploadFiles(file);
-    console.log("UploadThing odpoveď:", response);
+    const uploadedFile = Array.isArray(response) ? response[0] : response;
 
-    if (response.data) {
+    if (uploadedFile.data) {
       await db.execute({
         sql: "INSERT INTO couple_photos (user_id, path) VALUES (?, ?)",
-        args: [userId, response.data.url]
+        args: [userId, uploadedFile.data.url]
       });
-      console.log("Zapísané do DB");
       revalidatePath('/');
+      return { success: true };
     } else {
-      console.error("UploadThing nevrátil dáta:", response.error);
+      return { success: false, error: "UploadThing zamietol súbor: " + uploadedFile.error.message };
     }
-  } catch (error) {
-    console.error("Kritická chyba pri uploade:", error);
+  } catch (error: any) {
+    console.error("CHYBA ACTION:", error);
+    return { success: false, error: "Server error: " + error.message };
   }
 }
 

@@ -8,6 +8,7 @@ export function HomeView() {
   const [data, setData] = useState<{weddingDate: string | null, photos: any[]}>({ weddingDate: null, photos: [] });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const loadHome = async () => {
     const d = await getHomeData();
@@ -34,11 +35,27 @@ export function HomeView() {
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      const fd = new FormData();
-      fd.append('file', e.target.files[0]);
-      await uploadCouplePhoto(fd);
-      loadHome();
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    
+    const fd = new FormData();
+    fd.append('file', file);
+
+    try {
+      const res = await uploadCouplePhoto(fd);
+      if (res?.success) {
+        await loadHome(); 
+        setCurrentIndex(0);
+      } else {
+        alert("Chyba: " + (res?.error || "Neznámy problém"));
+      }
+    } catch (err) {
+      alert("Kritická chyba pri uploade");
+    } finally {
+      setIsUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -102,10 +119,19 @@ export function HomeView() {
         )}
 
         {/* Upload overlay */}
-        <label className="absolute bottom-6 right-6 p-4 bg-[var(--brand-primary)] text-white rounded-3xl shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest">
-          <Upload size={18} />
-          Pridať fotku
-          <input type="file" className="hidden" accept="image/*" onChange={handleUpload} />
+        <label className={`absolute bottom-6 right-6 p-4 bg-[var(--brand-primary)] text-white rounded-3xl shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+          {isUploading ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Nahrávam...
+            </div>
+          ) : (
+            <>
+              <Upload size={18} />
+              Pridať fotku
+            </>
+          )}
+          <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={isUploading} />
         </label>
       </div>
     </div>
