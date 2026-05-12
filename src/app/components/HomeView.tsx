@@ -74,7 +74,7 @@ export function HomeView() {
         )) : <div className="text-[var(--text-muted)] italic font-serif text-sm">Nastavte dátum svadby v nastaveniach...</div>}
       </div>
 
-      <div className="relative h-[500px] w-full rounded-[2.5rem] overflow-hidden group shadow-2xl border border-[var(--brand-primary)] bg-zinc-900">
+      <div className="relative h-[500px] w-full rounded-[2.5rem] overflow-hidden group shadow-2xl border border-[var(--brand-primary)]">
         <AnimatePresence mode="wait">
           {data.photos.length > 0 ? (
             <motion.img 

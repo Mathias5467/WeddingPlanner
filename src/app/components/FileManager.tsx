@@ -127,7 +127,7 @@ export function FileManager() {
         </label>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
         <AnimatePresence>
           {filteredFiles.map((file) => {
             const isImage = file.type.startsWith('image/');
@@ -193,9 +193,8 @@ export function FileManager() {
                     </p>
                   )}
                   
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-[var(--border-color)]/40">
+                  <div className="flex mt-2 pt-2 border-t border-[var(--border-color)]/40">
                     <span className="text-[10px] font-black text-[var(--text-muted)] uppercase">{formatSize(file.size)}</span>
-                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase opacity-40">{file.type.split('/')[1]}</span>
                   </div>
                 </div>
               </motion.div>
