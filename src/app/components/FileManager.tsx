@@ -147,8 +147,7 @@ export function FileManager() {
                     </p>
                   )}
                   
-                  <div className="flex items-center justify-between mt-1.5 border-t-2 border-white pt-1.5">
-                    <span className="text-[11px] font-black text-white uppercase tracking-widest">{file.type.split('/')[1]}</span>
+                  <div className="flex items-end justify-between mt-1.5 border-t-2 border-white pt-1.5">
                     <span className="text-[11px] font-bold text-white px-2 py-0.5 rounded-full border-2 border-white">{formatSize(file.size)}</span>
                   </div>
                 </div>
